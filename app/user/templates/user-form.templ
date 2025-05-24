@@ -1,0 +1,33 @@
+package user_templates
+
+import "github.com/leandrohsilveira/tsm/components"
+
+templ userForm() {
+	@components.Field(components.FieldProps{Name: "name", Label: "Name"})
+	@components.Field(components.FieldProps{Name: "email", Label: "E-mail"})
+	@components.Field(components.FieldProps{Name: "password", Label: "Password", Type: "password"})
+	@components.Field(components.FieldProps{Name: "confirm_password", Label: "Confirm password", Type: "password"})
+	<div class="flex flex-row-reverse gap-2">
+		@components.Button(components.ButtonProps{Type: "submit", Variant: components.ButtonVariantRaised}) {
+			Submit
+		}
+		@components.Button(components.ButtonProps{}) {
+			Cancel
+		}
+	</div>
+}
+
+templ signUpContent() {
+	<main class="w-full flex flex-col items-center justify-center gap-4 h-lvh">
+		<header class="flex items-center">
+			<h1>Sign-up</h1>
+		</header>
+		<form action="/user/new" method="POST" class="flex flex-col gap-4 w-sm">
+			@userForm()
+		</form>
+	</main>
+}
+
+templ SignUpPage() {
+	@components.Html("TSM - Sign Up", signUpContent())
+}
