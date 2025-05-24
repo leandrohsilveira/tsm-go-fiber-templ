@@ -1,0 +1,25 @@
+version: "2"
+servers:
+  - engine: postgresql
+    uri: "postgres://app:password@localhost:5432/app?sslmode=disable"
+sql:
+  - engine: postgresql
+    queries: sql/queries
+    schema: sql/migrations
+    gen:
+      go:
+        package: dao
+        out: app/dao
+        sql_package: pgx/v5
+        overrides:
+          - db_type: "uuid"
+            nullable: false
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - db_type: "uuid"
+            nullable: true
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+              pointer: true
