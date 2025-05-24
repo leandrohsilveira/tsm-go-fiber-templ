@@ -20,6 +20,8 @@ type databasePool struct {
 	pool *pgxpool.Pool
 }
 
+var DatabasePoolKey struct{}
+
 func NewPool(ctx context.Context) (DatabasePool, error) {
 	connString, isSet := os.LookupEnv("DATABASE_URL")
 	if !isSet {
