@@ -1,0 +1,25 @@
+package components
+
+type FieldProps struct {
+	Name  string
+	Label string
+	Value string
+	Class string
+	Type  string
+	Attrs templ.Attributes
+}
+
+templ Field(props FieldProps) {
+	<div class="flex w-full flex-col gap-2">
+		<label class="text-foreground pl-0.5" for={ props.Name }>{ props.Label }</label>
+		<input
+			class={ "w-full p-2 rounded-md border border-solid border-foreground text-foreground placeholder:text-foreground/30 focus:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-primary", props.Class }
+			id={ props.Name }
+			name={ props.Name }
+			type={ props.Type }
+			placeholder={ props.Label }
+			value={ props.Value }
+			{ props.Attrs... }
+		/>
+	</div>
+}
