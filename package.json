@@ -1,0 +1,19 @@
+{
+  "name": "tsm-go-fiber-templ",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build:css",
+    "build:watch": "npm run build:css -- --watch",
+    "build:css": "npx @tailwindcss/cli -i ./app/style.css -o ./app/public/style.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.7",
+    "tailwindcss": "^4.1.7"
+  }
+}

@@ -3,3 +3,6 @@ bin
 pkg
 dist
 app/dao
+app/public
+node_modules
+
