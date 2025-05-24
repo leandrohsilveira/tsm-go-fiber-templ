@@ -4,5 +4,6 @@ pkg
 dist
 app/dao
 app/public
+*_templ.go
 node_modules
 

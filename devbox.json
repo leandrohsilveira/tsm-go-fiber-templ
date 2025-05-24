@@ -14,10 +14,14 @@
       "echo 'Welcome to devbox!' > /dev/null"
     ],
     "scripts": {
+      "nvim": [
+        "nvim"
+      ],
       "start": [
         "migrate -source=file://sql/migrations -database=postgres://app:password@localhost:5432/app?sslmode=disable up",
         "sqlc generate",
         "cd app",
+        "go tool templ generate",
         "air"
       ],
       "test": [

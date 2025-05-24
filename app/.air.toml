@@ -5,11 +5,11 @@ tmp_dir = "../dist"
 [build]
   args_bin = []
   bin = "../dist/main"
-  cmd = "go build -o ../dist/main ."
+  cmd = "go tool templ generate && go build -o ../dist/main ."
   delay = 1000
   exclude_dir = ["assets", "vendor", "testdata", "public"]
   exclude_file = []
-  exclude_regex = ["_test.go", ".templ"]
+  exclude_regex = ["_test.go", ".*_templ.go"]
   exclude_unchanged = false
   follow_symlink = false
   full_bin = ""
