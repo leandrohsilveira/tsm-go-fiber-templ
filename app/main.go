@@ -13,8 +13,7 @@ func main() {
 
 	setup.SetupLogger(app)
 
-	ctx, err := setup.SetupDatabasePool(ctx, app)
-
+	ctx, err := setup.SetupDatabasePool(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
