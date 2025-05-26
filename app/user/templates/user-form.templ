@@ -17,17 +17,17 @@ templ userForm() {
 	</div>
 }
 
-templ signUpContent() {
+templ signUpContent(action string) {
 	<main class="w-full flex flex-col items-center justify-center gap-4 h-lvh">
 		<header class="flex items-center">
 			<h1>Sign-up</h1>
 		</header>
-		<form action="/user/new" method="POST" class="flex flex-col gap-4 w-sm">
+		<form action={ templ.URL(action) } method="POST" class="flex flex-col gap-4 w-sm">
 			@userForm()
 		</form>
 	</main>
 }
 
-templ SignUpPage() {
-	@components.Html("TSM - Sign Up", signUpContent())
+templ SignUpPage(action string) {
+	@components.Html("TSM - Sign Up", signUpContent(action))
 }
