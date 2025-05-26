@@ -1,6 +1,9 @@
 package auth
 
-import "github.com/leandrohsilveira/tsm/user"
+import (
+	"github.com/google/uuid"
+	"github.com/leandrohsilveira/tsm/user"
+)
 
 type AuthLoginPayloadDto struct {
 	Username string `json:"username" form:"username" validate:"required,email"`
@@ -15,4 +18,8 @@ type AuthLoginResultDto struct {
 
 type AuthCurrentUserInfoDto struct {
 	User user.UserDisplayDto `json:"user"`
+}
+
+type AuthTokenPayload struct {
+	UserID uuid.UUID
 }

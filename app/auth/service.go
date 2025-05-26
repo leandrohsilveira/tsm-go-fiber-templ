@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/leandrohsilveira/tsm/dao"
 	"github.com/leandrohsilveira/tsm/user"
 )
@@ -64,9 +65,31 @@ func (service *authService) Login(ctx context.Context, payload AuthLoginPayloadD
 	return result, nil
 }
 
-func (_ *authService) GetCurrentUserInfo(context.Context, string) (*AuthCurrentUserInfoDto, error) {
-	// TODO: add get current user info implementation
-	return nil, nil
+func (self *authService) GetCurrentUserInfo(ctx context.Context, token string) (*AuthCurrentUserInfoDto, error) {
+	payload, err := self.validateAndReadTokenPayload(token)
+
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := self.userService.GetByID(ctx, payload.UserID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if data == nil {
+		return nil, nil
+	}
+
+	dto := user.UserDisplayDto{
+		ID:    data.ID.String(),
+		Name:  data.Name,
+		Email: data.Email,
+		Role:  data.Role,
+	}
+
+	return &AuthCurrentUserInfoDto{User: dto}, nil
 }
 
 func (_ *authService) checkPassword(input, hash string) (bool, error) {
@@ -77,4 +100,14 @@ func (_ *authService) checkPassword(input, hash string) (bool, error) {
 func (_ *authService) generateToken(user *dao.User) (string, error) {
 	// TODO: generate a JWT token
 	return user.ID.String(), nil
+}
+
+func (_ *authService) validateAndReadTokenPayload(token string) (*AuthTokenPayload, error) {
+	userId, err := uuid.Parse(token)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &AuthTokenPayload{UserID: userId}, nil
 }
