@@ -4,10 +4,7 @@ import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
 
 templ userForm(errors *util.ValidationErr[UserCreateDto]) {
-	{{ data := UserCreateDto{} }}
-	if errors != nil && errors.Data != nil {
-		{{ data = *errors.Data }}
-	}
+	{{ data := util.GetErrData(errors) }}
 	@components.Field(components.FieldProps{
 		Name:     "name",
 		Label:    "Name",

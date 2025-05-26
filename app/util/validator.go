@@ -33,6 +33,13 @@ func GetFieldErr[T any](err *ValidationErr[T], field string) string {
 	return fieldErr.Tag
 }
 
+func GetErrData[T any](err *ValidationErr[T]) *T {
+	if err == nil || err.Data == nil {
+		return new(T)
+	}
+	return err.Data
+}
+
 func Validate[T any](value *T) (*ValidationErr[T], error) {
 	err := val.Struct(value)
 	errs, ok := err.(validator.ValidationErrors)
