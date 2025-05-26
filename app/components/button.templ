@@ -27,9 +27,9 @@ templ Button(props ButtonProps) {
 		class={
 			"rounded-md py-2 px-4 cursor-pointer border border-solid",
 			props.Class,
-			templ.KV("border-primary bg-primary hover:border-primary-light hover:bg-primary-light", variant == ButtonVariantRaised),
-			templ.KV("border-primary/30 bg-primary/30 hover:border-primary-dark/30 hover:bg-primary-dark/30", variant == ButtonVariantSoft),
-			templ.KV("border-primary text-primary-light hover:border-primary-light hover:bg-primary/30", variant == ButtonVariantOutlined),
+			templ.KV("border-primary bg-primary text-on-primary hover:border-primary-highlight hover:text-on-primary-highlight hover:bg-primary-highlight", variant == ButtonVariantRaised),
+			templ.KV("border-primary/30 bg-primary/30 text-on-primary hover:border-primary-muted/30 hover:bg-primary-muted/30 hover:text-on-primary-muted", variant == ButtonVariantSoft),
+			templ.KV("border-primary text-primary hover:border-primary-highlight hover:bg-primary/30 hover:text-on-primary", variant == ButtonVariantOutlined),
 		}
 		type={ btnType }
 	>
