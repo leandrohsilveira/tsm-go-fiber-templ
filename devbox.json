@@ -1,11 +1,19 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.2/.schema/devbox.schema.json",
-  "packages": [
-    "go@latest",
-    "gcc@latest",
-    "nodejs@22"
-  ],
+  "packages": {
+    "go": "latest",
+    "gcc": "latest",
+    "nodejs": "22",
+    "postgresql": "latest",
+    "glibcLocales": {
+      "version": "latest",
+      "platforms": [
+        "x86_64-linux"
+      ]
+    }
+  },
   "env": {
+    "DB_UI_DEV": "postgres://app:password@localhost:5432/app?sslmode=disable",
     "GOPATH": "$PWD",
     "PATH": "$PATH:$PWD/bin"
   },
@@ -18,7 +26,7 @@
         "nvim"
       ],
       "start": [
-        "migrate -source=file://sql/migrations -database=postgres://app:password@localhost:5432/app?sslmode=disable up",
+        "migrate -source=file://sql/migrations -database=$DB_UI_DEV up",
         "sqlc generate",
         "cd app",
         "go tool templ generate",
