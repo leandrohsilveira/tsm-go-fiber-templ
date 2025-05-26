@@ -1,0 +1,63 @@
+package user
+
+import "github.com/leandrohsilveira/tsm/components"
+import "github.com/leandrohsilveira/tsm/util"
+
+templ userForm(errors *util.ValidationErr[UserCreateDto]) {
+	{{ data := UserCreateDto{} }}
+	if errors != nil && errors.Data != nil {
+		{{ data = *errors.Data }}
+	}
+	@components.Field(components.FieldProps{
+		Name:     "name",
+		Label:    "Name",
+		Required: true,
+		Value:    data.Name,
+		Error:    util.GetFieldErr(errors, "Name"),
+	})
+	@components.Field(components.FieldProps{
+		Name:     "email",
+		Label:    "E-mail",
+		Required: true,
+		Value:    data.Email,
+		Error:    util.GetFieldErr(errors, "Email"),
+	})
+	@components.Field(components.FieldProps{
+		Name:     "password",
+		Label:    "Password",
+		Type:     "password",
+		Required: true,
+		Value:    data.Password,
+		Error:    util.GetFieldErr(errors, "Password"),
+	})
+	@components.Field(components.FieldProps{
+		Name:     "confirm_password",
+		Label:    "Confirm password",
+		Type:     "password",
+		Required: true,
+		Value:    data.ConfirmPassword,
+		Error:    util.GetFieldErr(errors, "ConfirmPassword"),
+	})
+	@components.RequiredLegend()
+	<div class="flex flex-row-reverse gap-2">
+		@components.Button(components.ButtonProps{Type: "submit", Variant: components.ButtonVariantRaised}) {
+			Submit
+		}
+		@components.Button(components.ButtonProps{Type: "link", Href: "/"}) {
+			Cancel
+		}
+	</div>
+}
+
+templ SignUpPage(action string, err *util.ValidationErr[UserCreateDto]) {
+	@components.Html("TSM - Sign Up") {
+		<main class="w-full flex flex-col items-center justify-center gap-4 h-lvh">
+			<header class="flex items-center">
+				<h1>Sign-up</h1>
+			</header>
+			<form action={ templ.URL(action) } method="POST" class="flex flex-col gap-4 w-sm">
+				@userForm(err)
+			</form>
+		</main>
+	}
+}

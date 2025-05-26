@@ -3,13 +3,14 @@ package home
 import "github.com/leandrohsilveira/tsm/components"
 
 templ homeContent() {
-	<main class="w-full flex flex-col h-lvh items-center justify-center">
-		<header>
-			<h1>Welcome</h1>
-		</header>
-	</main>
 }
 
 templ HomePage() {
-	@components.Html("TSM - Home", homeContent())
+	@components.Html("TSM - Home") {
+		<main class="w-full flex flex-col h-lvh items-center justify-center">
+			<header>
+				<h1>Welcome</h1>
+			</header>
+		</main>
+	}
 }

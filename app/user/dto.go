@@ -7,7 +7,7 @@ type UserCreateDto struct {
 	Email           string       `json:"email" form:"email" validate:"required,email"`
 	Password        string       `json:"password" form:"password" validate:"required,min=6"`
 	ConfirmPassword string       `json:"confirm_password" form:"confirm_password" validate:"required,eqfield=Password"`
-	Role            dao.UserRole `json:"role" form:"role" validate:"required"`
+	Role            dao.UserRole `json:"role" form:"role"`
 }
 
 type UserDisplayDto struct {

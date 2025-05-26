@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/leandrohsilveira/tsm/util"
 )
 
 type UserController interface {
-	Create(*fiber.Ctx) (*UserDisplayDto, error)
+	Create(*fiber.Ctx) (*UserDisplayDto, *util.ValidationErr[UserCreateDto], error)
 }
 
 type userController struct {
@@ -18,17 +19,27 @@ func NewController(userService UserService) UserController {
 	return &userController{userService: userService}
 }
 
-func (controller *userController) Create(c *fiber.Ctx) (*UserDisplayDto, error) {
+func (controller *userController) Create(c *fiber.Ctx) (*UserDisplayDto, *util.ValidationErr[UserCreateDto], error) {
 	payload := new(UserCreateDto)
 
 	if err := c.BodyParser(payload); err != nil {
-		return nil, fiber.NewError(http.StatusUnprocessableEntity, err.Error())
+		return nil, nil, fiber.NewError(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	validationErr, err := util.Validate(payload)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if validationErr != nil {
+		return nil, validationErr, nil
 	}
 
 	data, err := controller.userService.Create(c.UserContext(), *payload)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	dto := &UserDisplayDto{
@@ -38,5 +49,5 @@ func (controller *userController) Create(c *fiber.Ctx) (*UserDisplayDto, error) 
 		Role:  data.Role,
 	}
 
-	return dto, nil
+	return dto, nil, nil
 }

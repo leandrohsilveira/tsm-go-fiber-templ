@@ -1,11 +1,10 @@
 package components
 
 type HtmlProps struct {
-	Title   string
-	Content templ.Component
+	Title string
 }
 
-templ Html(title string, content templ.Component) {
+templ Html(title string) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -15,7 +14,7 @@ templ Html(title string, content templ.Component) {
 			<link rel="stylesheet" href="/public/style.css"/>
 		</head>
 		<body class="w-full flex flex-col gap-4">
-			@content
+			{ children... }
 		</body>
 	</html>
 }

@@ -11,6 +11,8 @@
   --color-on-primary-highlight: var(--color-orange-950);
   --color-primary-muted: var(--color-orange-600);
   --color-on-primary-muted: var(--color-orange-50);
+  --color-error: var(--color-red-500);
+  --color-on-error: var(--color-red-50);
 }
 
 @layer base {

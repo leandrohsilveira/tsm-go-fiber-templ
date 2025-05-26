@@ -1,25 +1,47 @@
 package components
 
 type FieldProps struct {
-	Name  string
-	Label string
-	Value string
-	Class string
-	Type  string
-	Attrs templ.Attributes
+	Name     string
+	Label    string
+	Value    string
+	Class    string
+	Type     string
+	Required bool
+	Error    string
+	Attrs    templ.Attributes
+}
+
+script handleInput(event templ.JSExpression) {
+  const target = event.target
+  const parent = target.parentElement
+  if (!parent.hasAttribute('data-show-errors')) return;
+  parent.removeAttribute('data-show-errors')
 }
 
 templ Field(props FieldProps) {
-	<div class="flex w-full flex-col gap-2">
-		<label class="text-foreground pl-0.5" for={ props.Name }>{ props.Label }</label>
+	{{ hasErrors := props.Error != "" }}
+	<div class="group flex w-full flex-col gap-2" data-show-errors?={ hasErrors } data-required?={ props.Required }>
+		<label for={ props.Name } class="text-foreground pl-0.5 group-data-required:after:text-error after:m-0.5 group-data-required:after:content-['*']">{ props.Label }</label>
 		<input
-			class={ "w-full p-2 rounded-md border border-solid border-foreground text-foreground placeholder:text-foreground/30 focus:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-primary", props.Class }
+			class={
+				"w-full p-2 rounded-md border border-solid border-foreground text-foreground placeholder:text-foreground/30",
+				"focus:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-primary group-data-show-errors:border-error",
+				props.Class,
+			}
 			id={ props.Name }
 			name={ props.Name }
 			type={ props.Type }
 			placeholder={ props.Label }
 			value={ props.Value }
+			oninput={ handleInput(templ.JSExpression("event")) }
 			{ props.Attrs... }
 		/>
+		if props.Error != "" {
+			<div class="hidden pl-0.5 text-error group-data-show-errors:flex">{ props.Error }</div>
+		}
 	</div>
+}
+
+templ RequiredLegend() {
+	<div class="before:text-error before:mr-0.5 before:content-['*'] text-xs before:text-base">Required field</div>
 }
