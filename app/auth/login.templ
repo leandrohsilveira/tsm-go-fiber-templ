@@ -1,0 +1,46 @@
+package auth
+
+import "github.com/leandrohsilveira/tsm/components"
+import "github.com/leandrohsilveira/tsm/util"
+
+templ LoginPage(action string, validationErr *util.ValidationErr[AuthLoginPayloadDto], err error) {
+	{{ data := util.GetErrData(validationErr) }}
+	@components.CenterLayout("Sign-in") {
+		if err != nil {
+			@components.Error(err.Error())
+		}
+		<form action={ templ.URL(action) } method="POST" class="flex flex-col gap-4">
+			@components.Field(components.FieldProps{
+				Name:     "username",
+				Type:     "email",
+				Label:    "E-mail",
+				Value:    data.Username,
+				Error:    util.GetFieldErr(validationErr, "Username"),
+				Required: true,
+				Index:    0,
+				Attrs: templ.Attributes{
+					"autocomplete": "username",
+				},
+			})
+			@components.Field(components.FieldProps{
+				Name:     "password",
+				Type:     "password",
+				Label:    "Password",
+				Value:    data.Password,
+				Error:    util.GetFieldErr(validationErr, "Password"),
+				Required: true,
+				Index:    0,
+				Attrs: templ.Attributes{
+					"autocomplete": "current-password",
+				},
+			})
+			@components.Button(components.ButtonProps{
+				Type:    "submit",
+				Variant: components.ButtonVariantRaised,
+				Index:   0,
+			}) {
+				Login
+			}
+		</form>
+	}
+}
