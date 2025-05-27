@@ -3,21 +3,21 @@ package user
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
 
-templ userForm(errors *util.ValidationErr[UserCreateDto]) {
-	{{ data := util.GetErrData(errors) }}
+templ UserForm(validationErr *util.ValidationErr[UserCreateDto]) {
+	{{ data := util.GetErrData(validationErr) }}
 	@components.Field(components.FieldProps{
 		Name:     "name",
 		Label:    "Name",
 		Required: true,
 		Value:    data.Name,
-		Error:    util.GetFieldErr(errors, "Name"),
+		Error:    util.GetFieldErr(validationErr, "Name"),
 	})
 	@components.Field(components.FieldProps{
 		Name:     "email",
 		Label:    "E-mail",
 		Required: true,
 		Value:    data.Email,
-		Error:    util.GetFieldErr(errors, "Email"),
+		Error:    util.GetFieldErr(validationErr, "Email"),
 	})
 	@components.Field(components.FieldProps{
 		Name:     "password",
@@ -25,7 +25,7 @@ templ userForm(errors *util.ValidationErr[UserCreateDto]) {
 		Type:     "password",
 		Required: true,
 		Value:    data.Password,
-		Error:    util.GetFieldErr(errors, "Password"),
+		Error:    util.GetFieldErr(validationErr, "Password"),
 	})
 	@components.Field(components.FieldProps{
 		Name:     "confirm_password",
@@ -33,7 +33,7 @@ templ userForm(errors *util.ValidationErr[UserCreateDto]) {
 		Type:     "password",
 		Required: true,
 		Value:    data.ConfirmPassword,
-		Error:    util.GetFieldErr(errors, "ConfirmPassword"),
+		Error:    util.GetFieldErr(validationErr, "ConfirmPassword"),
 	})
 	@components.RequiredLegend()
 	<div class="flex flex-row-reverse gap-2">
@@ -44,17 +44,4 @@ templ userForm(errors *util.ValidationErr[UserCreateDto]) {
 			Cancel
 		}
 	</div>
-}
-
-templ SignUpPage(action string, err *util.ValidationErr[UserCreateDto]) {
-	@components.Html("TSM - Sign Up") {
-		<main class="w-full flex flex-col items-center justify-center gap-4 h-lvh">
-			<header class="flex items-center">
-				<h1>Sign-up</h1>
-			</header>
-			<form action={ templ.URL(action) } method="POST" class="flex flex-col gap-4 w-sm">
-				@userForm(err)
-			</form>
-		</main>
-	}
 }

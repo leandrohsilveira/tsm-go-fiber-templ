@@ -1,0 +1,12 @@
+package user
+
+import "github.com/leandrohsilveira/tsm/components"
+import "github.com/leandrohsilveira/tsm/util"
+
+templ SignUpPage(action string, validationErr *util.ValidationErr[UserCreateDto]) {
+	@components.CenterLayout("Sign Up") {
+		<form action={ templ.URL(action) } method="POST" class="flex flex-col gap-4 w-sm">
+			@UserForm(validationErr)
+		</form>
+	}
+}

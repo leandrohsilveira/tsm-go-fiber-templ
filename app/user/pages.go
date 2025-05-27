@@ -9,26 +9,24 @@ import (
 )
 
 func Pages(controller UserController) *fiber.App {
-
 	app := fiber.New()
 
-	app.Get("/new", func(c *fiber.Ctx) error {
+	app.Get("/signup", func(c *fiber.Ctx) error {
 		return render.Html(c, SignUpPage(c.Path(), nil))
 	})
 
-	app.Post("/new", func(c *fiber.Ctx) error {
+	app.Post("/signup", func(c *fiber.Ctx) error {
 		_, validationErr, err := controller.Create(c)
 
 		if err != nil {
 			return err
 		}
 
-		logger := log.Ctx(c.UserContext())
-
 		if validationErr != nil {
 			return render.Html(c, SignUpPage(c.Path(), validationErr))
 		}
 
+		logger := log.Ctx(c.UserContext())
 		logger.Info().Msg("Create user form submitted")
 
 		return c.Redirect("/", http.StatusMovedPermanently)

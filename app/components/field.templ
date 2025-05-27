@@ -8,6 +8,7 @@ type FieldProps struct {
 	Type     string
 	Required bool
 	Error    string
+	Index    int
 	Attrs    templ.Attributes
 }
 
@@ -33,6 +34,7 @@ templ Field(props FieldProps) {
 			type={ props.Type }
 			placeholder={ props.Label }
 			value={ props.Value }
+			tabindex={ props.Index }
 			oninput={ handleInput(templ.JSExpression("event")) }
 			{ props.Attrs... }
 		/>

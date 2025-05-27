@@ -15,12 +15,14 @@ type ButtonProps struct {
 	Class   string
 	Type    string
 	Href    string
+	Index   int
 }
 
 func defaultProps(props ButtonProps) ButtonProps {
 	return ButtonProps{
 		Class:   props.Class,
 		Href:    props.Href,
+		Index:   props.Index,
 		Type:    util.ValueOrDefault(props.Type != "", props.Type, "button"),
 		Variant: util.ValueOrDefault(props.Variant != "", props.Variant, ButtonVariantOutlined),
 	}
@@ -40,11 +42,11 @@ func classes(props ButtonProps) templ.CSSClasses {
 templ Button(props ButtonProps) {
 	{{ props = defaultProps(props) }}
 	if props.Type == "link" {
-		<a class={ classes(props) } href={ templ.URL(props.Href) }>
+		<a class={ classes(props) } href={ templ.URL(props.Href) } tabindex={ props.Index }>
 			{ children... }
 		</a>
 	} else {
-		<button class={ classes(props) } type={ props.Type }>
+		<button class={ classes(props) } type={ props.Type } tabindex={ props.Index }>
 			{ children... }
 		</button>
 	}
