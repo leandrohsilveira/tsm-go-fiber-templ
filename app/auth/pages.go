@@ -4,18 +4,18 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/leandrohsilveira/tsm/guards"
 	"github.com/leandrohsilveira/tsm/render"
 )
 
 func Pages(controller AuthController) *fiber.App {
-
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", guards.AnonymousGuard, func(c *fiber.Ctx) error {
 		return render.Html(c, LoginPage(c.Path(), nil, nil))
 	})
 
-	app.Post("/", func(c *fiber.Ctx) error {
+	app.Post("/", guards.AnonymousGuard, func(c *fiber.Ctx) error {
 		result, validationErr, err := controller.Login(c)
 
 		if err == AuthUsernamePasswordIncorrectErr {
@@ -23,7 +23,7 @@ func Pages(controller AuthController) *fiber.App {
 		}
 
 		if err != nil {
-			return render.Html(c, LoginPage(c.Path(), nil, render.DefaultErr(err, "Authentication failed")))
+			return render.Html(c, LoginPage(c.Path(), nil, render.DefaultErr(c, err, "Authentication failed")))
 		}
 
 		if validationErr != nil {

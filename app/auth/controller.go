@@ -7,6 +7,7 @@ import (
 
 type AuthController interface {
 	Login(*fiber.Ctx) (*AuthLoginResultDto, *util.ValidationErr[AuthLoginPayloadDto], error)
+	GetCurrentUser(*fiber.Ctx) (*AuthCurrentUserInfoDto, error)
 }
 
 type authController struct {
@@ -41,4 +42,18 @@ func (self *authController) Login(c *fiber.Ctx) (*AuthLoginResultDto, *util.Vali
 	}
 
 	return result, nil, nil
+}
+
+func (self *authController) GetCurrentUser(c *fiber.Ctx) (*AuthCurrentUserInfoDto, error) {
+	token := c.Get("authorization")
+
+	if token == "" {
+		token = c.Cookies("Authorization")
+	}
+
+	if token == "" {
+		return nil, nil
+	}
+
+	return self.authService.GetCurrentUserInfo(c.Context(), token)
 }
