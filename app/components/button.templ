@@ -8,6 +8,7 @@ const (
 	ButtonVariantRaised   ButtonVariant = "raised"
 	ButtonVariantOutlined ButtonVariant = "outlined"
 	ButtonVariantSoft     ButtonVariant = "soft"
+	ButtonVariantClean    ButtonVariant = "clean"
 )
 
 type ButtonProps struct {
@@ -35,6 +36,7 @@ func classes(props ButtonProps) templ.CSSClasses {
 		templ.KV("border-primary bg-primary text-on-primary hover:border-primary-highlight hover:text-on-primary-highlight hover:bg-primary-highlight", props.Variant == ButtonVariantRaised),
 		templ.KV("border-primary/30 bg-primary/30 text-on-primary hover:border-primary-muted/30 hover:bg-primary-muted/30 hover:text-on-primary-muted", props.Variant == ButtonVariantSoft),
 		templ.KV("border-primary text-primary hover:border-primary-highlight hover:bg-primary/30 hover:text-on-primary", props.Variant == ButtonVariantOutlined),
+		templ.KV("border-none text-primary hover:border-primary/30 hover:bg-primary/30 hover:text-on-primary", props.Variant == ButtonVariantClean),
 	}
 
 }

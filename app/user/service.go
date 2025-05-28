@@ -6,12 +6,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/leandrohsilveira/tsm/dao"
 	"github.com/leandrohsilveira/tsm/database"
+	"github.com/leandrohsilveira/tsm/util"
 )
 
 type UserService interface {
 	Create(context.Context, UserCreateDto) (*dao.User, error)
 	GetByEmail(context.Context, string) (*dao.User, error)
 	GetByID(context.Context, uuid.UUID) (*dao.User, error)
+	GetList(context.Context, util.PageParams) (*util.PageResult[dao.User], error)
 }
 
 var UserServiceKey struct{}
@@ -94,4 +96,33 @@ func (self *userService) GetByID(ctx context.Context, id uuid.UUID) (*dao.User, 
 	}
 
 	return &data, nil
+}
+
+func (self *userService) GetList(ctx context.Context, params util.PageParams) (*util.PageResult[dao.User], error) {
+	queries, release, err := self.pool.Acquire(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer release()
+
+	data, err := queries.ListUsers(ctx, dao.ListUsersParams{
+		Limit:  params.Limit,
+		Offset: params.Offset(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	count, err := queries.CountUsers(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	result := util.NewPageResult(data, count, params.Limit)
+
+	return &result, nil
 }

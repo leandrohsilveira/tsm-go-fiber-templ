@@ -5,6 +5,7 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rs/zerolog/log"
 )
 
 func Html(ctx *fiber.Ctx, component templ.Component) error {
@@ -12,9 +13,10 @@ func Html(ctx *fiber.Ctx, component templ.Component) error {
 	return component.Render(ctx.Context(), ctx.Response().BodyWriter())
 }
 
-func DefaultErr(err error, message string) error {
+func DefaultErr(ctx *fiber.Ctx, err error, message string) error {
 	if message == "" {
 		message = "Internal server error"
 	}
-	return errors.Join(errors.New(message), err)
+	log.Ctx(ctx.UserContext()).Error().Stack().Err(err).Msg(message)
+	return errors.New(message)
 }

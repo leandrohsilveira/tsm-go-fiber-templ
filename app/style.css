@@ -3,7 +3,8 @@
 @source ".";
 
 @theme {
-  --color-backgound: var(--color-gray-900);
+  --color-background: var(--color-gray-900);
+  --color-background-highlight: var(--color-gray-700);
   --color-foreground: var(--color-gray-100);
   --color-primary: var(--color-orange-400);
   --color-on-primary: var(--color-orange-50);
@@ -17,7 +18,7 @@
 
 @layer base {
   body {
-    @apply bg-backgound text-foreground;
+    @apply bg-background text-foreground;
   }
 
   h1 {
@@ -38,5 +39,9 @@
 
   h5 {
     @apply text-base font-bold;
+  }
+
+  strong {
+    @apply font-bold;
   }
 }

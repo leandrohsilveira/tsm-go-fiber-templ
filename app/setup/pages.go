@@ -3,9 +3,7 @@ package setup
 import (
 	"context"
 
-	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/leandrohsilveira/tsm/auth"
 	"github.com/leandrohsilveira/tsm/database"
 	"github.com/leandrohsilveira/tsm/home"
@@ -15,14 +13,14 @@ import (
 func SetupPages(ctx context.Context, app *fiber.App) {
 	pool := ctx.Value(database.DatabasePoolKey).(database.DatabasePool)
 
-	app.Static("/public", "./public")
-	app.Get("/", adaptor.HTTPHandler(templ.Handler(home.HomePage())))
-
 	userService := user.NewService(pool)
-	userController := user.NewController(userService)
-	app.Mount("/user", user.Pages(userController))
-
 	authService := auth.NewService(userService)
+	userController := user.NewController(userService)
 	authController := auth.NewController(authService)
+
+	app.Static("/public", "./public")
+	app.Use(auth.AuthMiddleware(authController))
+	app.Mount("/", home.Pages())
+	app.Mount("/user", user.Pages(userController))
 	app.Mount("/login", auth.Pages(authController))
 }

@@ -1,0 +1,36 @@
+package components
+
+type ListDirection string
+
+const (
+	ListDirectionVertical   ListDirection = "vertical"
+	ListDirectionHorizontal ListDirection = "horizontal"
+)
+
+type ListContainerProps struct {
+	Direction ListDirection
+	Class     templ.CSSClasses
+}
+
+templ ListContainer(props ListContainerProps) {
+	<ul
+		class={ "w-full flex gap-2",
+      templ.KV("flex-col", props.Direction != ListDirectionHorizontal),
+      templ.KV("flex-row flex-wrap", props.Direction == ListDirectionHorizontal),
+      props.Class }
+	>
+		{ children... }
+	</ul>
+}
+
+type ListItemProps struct {
+	Thin       bool
+	Class      templ.CSSClasses
+	Selectable bool
+}
+
+templ ListItem(props ListItemProps) {
+	<li class={ "bg-background-highlight rounded-lg", templ.KV("px-4 p-2", !props.Thin), templ.KV("hover:bg-background-highlight/70", props.Selectable), props.Class }>
+		{ children... }
+	</li>
+}

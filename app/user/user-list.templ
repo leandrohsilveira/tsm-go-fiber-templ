@@ -1,0 +1,33 @@
+package user
+
+import "github.com/leandrohsilveira/tsm/components"
+import "fmt"
+import "github.com/leandrohsilveira/tsm/guards"
+
+templ userList(users []UserDisplayDto) {
+	@components.ListContainer(components.ListContainerProps{Direction: components.ListDirectionHorizontal}) {
+		if len(users) > 0 {
+			for _, user := range users {
+				@components.ListItem(components.ListItemProps{Class: templ.CSSClasses{"w-80"}, Selectable: true}) {
+					@userListItem(user)
+				}
+			}
+		} else {
+			<div>No results</div>
+		}
+	}
+}
+
+templ userListItem(user UserDisplayDto) {
+	{{ href := fmt.Sprintf("./manage/%s", user.ID) }}
+	<a href={ templ.URL(href) } class="flex flex-col gap-2 w-full">
+		<strong>{ user.Name }</strong>
+		<span>{ user.Email }</span>
+	</a>
+}
+
+templ UserListPage(users []UserDisplayDto, info *guards.CurrentUserDto) {
+	@components.PageContainerLayout("Manage users", info) {
+		@userList(users)
+	}
+}

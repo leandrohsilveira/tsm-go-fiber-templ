@@ -1,16 +1,12 @@
 package home
 
 import "github.com/leandrohsilveira/tsm/components"
+import "github.com/leandrohsilveira/tsm/guards"
 
-templ homeContent() {
-}
-
-templ HomePage() {
-	@components.Html("TSM - Home") {
-		<main class="w-full flex flex-col h-lvh items-center justify-center">
-			<header>
-				<h1>Welcome</h1>
-			</header>
-		</main>
+templ HomePage(info *guards.CurrentUserDto) {
+	@components.PageContainerLayout("Home", info) {
+		<div class="w-full flex flex-col items-center justify-center">
+			<h1>Welcome</h1>
+		</div>
 	}
 }
