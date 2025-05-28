@@ -3,6 +3,7 @@ package user
 import "github.com/leandrohsilveira/tsm/components"
 import "fmt"
 import "github.com/leandrohsilveira/tsm/guards"
+import "github.com/leandrohsilveira/tsm/dao"
 
 templ userList(users []UserDisplayDto) {
 	@components.ListContainer(components.ListContainerProps{Direction: components.ListDirectionVertical}) {
@@ -22,8 +23,23 @@ templ userListItem(user UserDisplayDto) {
 	{{ href := fmt.Sprintf("./manage/%s", user.ID) }}
 	<a href={ templ.URL(href) } class="flex flex-col gap-2 w-full">
 		<strong>{ user.Name }</strong>
-		<span>{ user.Email }</span>
+		<div class="flex gap-2">
+			@userRole(user)
+			<span>{ user.Email }</span>
+		</div>
 	</a>
+}
+
+templ userRole(user UserDisplayDto) {
+	if user.Role == dao.UserRoleAdminUser {
+		@components.Tag(components.TagProps{Color: components.TagColorPrimary}) {
+			Admin
+		}
+	} else {
+		@components.Tag(components.TagProps{Color: components.TagColorSecondaryMuted}) {
+			Regular
+		}
+	}
 }
 
 templ UserListPage(users []UserDisplayDto, info *guards.CurrentUserDto) {
