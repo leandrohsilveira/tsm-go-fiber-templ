@@ -42,3 +42,6 @@ ORDER BY created_at DESC
 LIMIT $1
 OFFSET $2;
 
+-- name: CountUsers :one
+SELECT count(*) FROM users;
+
