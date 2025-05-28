@@ -7,6 +7,5 @@ import (
 func SetupApp() *fiber.App {
 	return fiber.New(fiber.Config{
 		AppName: "TSM",
-		ETag:    true,
 	})
 }

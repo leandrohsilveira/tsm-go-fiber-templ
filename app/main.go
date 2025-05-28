@@ -11,6 +11,7 @@ func main() {
 	ctx := context.Background()
 	app := setup.SetupApp()
 
+	setup.SetupETag(app)
 	setup.SetupLogger(app)
 
 	ctx, err := setup.SetupDatabasePool(ctx)
