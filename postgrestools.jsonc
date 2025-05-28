@@ -1,0 +1,16 @@
+{
+  "$schema": "https://pgtools.dev/schemas/0.0.0/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "db": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "app",
+    "username": "app",
+    "password": "password"
+  }
+}
