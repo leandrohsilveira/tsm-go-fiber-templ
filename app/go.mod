@@ -4,6 +4,7 @@ go 1.24.3
 
 require (
 	github.com/a-h/templ v0.3.865
+	github.com/fatih/structs v1.1.0
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/contrib/fiberzerolog v1.0.3
 	github.com/gofiber/fiber/v2 v2.52.8

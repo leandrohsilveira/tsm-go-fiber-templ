@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/fatih/structs"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -11,15 +12,15 @@ type FieldErrorEntry struct {
 	Value any    `json:"value"`
 }
 
-type ValidationErr[T any] struct {
+type ValidationErr struct {
 	Message string                     `json:"message"`
 	Fields  map[string]FieldErrorEntry `json:"fields"`
-	Data    *T                         `json:"data"`
+	Data    map[string]any             `json:"data"`
 }
 
 var val = validator.New()
 
-func GetFieldErr[T any](err *ValidationErr[T], field string) string {
+func GetFieldErr(err *ValidationErr, field string) string {
 	if err == nil {
 		return ""
 	}
@@ -33,18 +34,30 @@ func GetFieldErr[T any](err *ValidationErr[T], field string) string {
 	return fieldErr.Tag
 }
 
-func GetErrData[T any](err *ValidationErr[T]) *T {
+func GetErrData(err *ValidationErr) map[string]any {
 	if err == nil || err.Data == nil {
-		return new(T)
+		return make(map[string]any)
 	}
 	return err.Data
 }
 
-func Validate[T any](value *T) (*ValidationErr[T], error) {
+func GetErrDataStr(err *ValidationErr, field string) string {
+	if err == nil || err.Data == nil {
+		return ""
+	}
+	val, ok := err.Data[field]
+	if !ok {
+		return ""
+	}
+	return val.(string)
+}
+
+func Validate[T any](value *T) (*ValidationErr, error) {
 	err := val.Struct(value)
 	errs, ok := err.(validator.ValidationErrors)
 
 	if ok {
+
 		fields := make(map[string]FieldErrorEntry)
 
 		for _, field := range errs {
@@ -56,10 +69,10 @@ func Validate[T any](value *T) (*ValidationErr[T], error) {
 			}
 		}
 
-		result := &ValidationErr[T]{
+		result := &ValidationErr{
 			Message: err.Error(),
 			Fields:  fields,
-			Data:    value,
+			Data:    structs.Map(value),
 		}
 
 		return result, nil
@@ -73,6 +86,6 @@ func Validate[T any](value *T) (*ValidationErr[T], error) {
 	return nil, nil
 }
 
-func (err *ValidationErr[T]) Error() string {
+func (err *ValidationErr) Error() string {
 	return err.Message
 }

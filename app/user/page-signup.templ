@@ -1,0 +1,22 @@
+package user
+
+import "github.com/leandrohsilveira/tsm/components"
+import "github.com/leandrohsilveira/tsm/util"
+
+templ SignUpPage(action string, validationErr *util.ValidationErr) {
+	@components.CenterLayout("Sign Up") {
+		<form action={ templ.URL(action) } method="POST" class="flex flex-col gap-4 w-sm">
+			@userDataForm(userDataFormProps{ValidationErr: validationErr})
+			@userPasswordForm(userPasswordFormProps{ValidationErr: validationErr})
+			@components.RequiredLegend()
+			<div class="flex flex-row-reverse gap-2">
+				@components.Button(components.ButtonProps{Type: "submit", Variant: components.ButtonVariantRaised}) {
+					Submit
+				}
+				@components.Button(components.ButtonProps{Type: "link", Href: "/"}) {
+					Cancel
+				}
+			</div>
+		</form>
+	}
+}

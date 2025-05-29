@@ -9,7 +9,7 @@ import (
 )
 
 type UserController interface {
-	Create(*fiber.Ctx) (*UserDisplayDto, *util.ValidationErr[UserCreateDto], error)
+	Create(*fiber.Ctx) (*UserDisplayDto, *util.ValidationErr, error)
 	List(*fiber.Ctx) (*util.PageResult[UserDisplayDto], error)
 }
 
@@ -21,7 +21,7 @@ func NewController(userService UserService) UserController {
 	return &userController{userService: userService}
 }
 
-func (controller *userController) Create(c *fiber.Ctx) (*UserDisplayDto, *util.ValidationErr[UserCreateDto], error) {
+func (controller *userController) Create(c *fiber.Ctx) (*UserDisplayDto, *util.ValidationErr, error) {
 	payload := new(UserCreateDto)
 
 	if err := c.BodyParser(payload); err != nil {

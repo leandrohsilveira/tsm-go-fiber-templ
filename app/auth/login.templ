@@ -3,8 +3,7 @@ package auth
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
 
-templ LoginPage(action string, validationErr *util.ValidationErr[AuthLoginPayloadDto], err error) {
-	{{ data := util.GetErrData(validationErr) }}
+templ LoginPage(action string, validationErr *util.ValidationErr, err error) {
 	@components.CenterLayout("Sign-in") {
 		if err != nil {
 			@components.Error(err.Error())
@@ -14,7 +13,7 @@ templ LoginPage(action string, validationErr *util.ValidationErr[AuthLoginPayloa
 				Name:     "username",
 				Type:     "email",
 				Label:    "E-mail",
-				Value:    data.Username,
+				Value:    util.GetErrDataStr(validationErr, "Username"),
 				Error:    util.GetFieldErr(validationErr, "Username"),
 				Required: true,
 				Index:    0,
@@ -26,7 +25,7 @@ templ LoginPage(action string, validationErr *util.ValidationErr[AuthLoginPayloa
 				Name:     "password",
 				Type:     "password",
 				Label:    "Password",
-				Value:    data.Password,
+				Value:    util.GetErrDataStr(validationErr, "Password"),
 				Error:    util.GetFieldErr(validationErr, "Password"),
 				Required: true,
 				Index:    0,
