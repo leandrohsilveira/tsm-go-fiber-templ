@@ -1,8 +1,7 @@
 package user
 
-import "github.com/leandrohsilveira/tsm/components"
 import "fmt"
-import "github.com/leandrohsilveira/tsm/guards"
+import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/dao"
 
 templ userList(users []UserDisplayDto) {
@@ -39,11 +38,5 @@ templ userRole(user UserDisplayDto) {
 		@components.Tag(components.TagProps{Color: components.TagColorSecondaryMuted}) {
 			Regular
 		}
-	}
-}
-
-templ UserListPage(users []UserDisplayDto, info *guards.CurrentUserDto) {
-	@components.PageContainerLayout("Manage users", info) {
-		@userList(users)
 	}
 }

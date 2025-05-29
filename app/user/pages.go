@@ -42,7 +42,7 @@ func Pages(controller UserController) *fiber.App {
 			return err
 		}
 
-		return render.Html(c, UserListPage(result.Items, info))
+		return render.Html(c, UserManagePage(result.Items, info))
 	})
 
 	return app
