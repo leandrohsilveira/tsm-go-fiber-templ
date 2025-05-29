@@ -8,9 +8,7 @@ templ userList(users []UserDisplayDto) {
 	@components.ListContainer(components.ListContainerProps{Direction: components.ListDirectionVertical}) {
 		if len(users) > 0 {
 			for _, user := range users {
-				@components.ListItem(components.ListItemProps{Selectable: true}) {
-					@userListItem(user)
-				}
+				@userListItem(user)
 			}
 		} else {
 			<div>No results</div>
@@ -20,13 +18,15 @@ templ userList(users []UserDisplayDto) {
 
 templ userListItem(user UserDisplayDto) {
 	{{ href := fmt.Sprintf("./manage/%s", user.ID) }}
-	<a href={ templ.URL(href) } class="flex flex-col gap-2 w-full">
-		<strong>{ user.Name }</strong>
-		<div class="flex gap-2">
-			@userRole(user)
-			<span>{ user.Email }</span>
-		</div>
-	</a>
+	@components.ListItem(components.ListItemProps{Selectable: true}) {
+		<a href={ templ.URL(href) } class="flex flex-col gap-2 w-full focus-visible:outline-none">
+			<strong>{ user.Name }</strong>
+			<div class="flex gap-2">
+				@userRole(user)
+				<span>{ user.Email }</span>
+			</div>
+		</a>
+	}
 }
 
 templ userRole(user UserDisplayDto) {
