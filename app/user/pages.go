@@ -45,5 +45,17 @@ func Pages(controller UserController) *fiber.App {
 		return render.Html(c, UserManagePage(result.Items, info))
 	})
 
+	app.Get("/manage/:id", guards.AdminUserGuard, func(c *fiber.Ctx) error {
+		info := guards.GetCurrentUser(c)
+
+		data, err := controller.GetByID(c)
+
+		if err != nil {
+			return err
+		}
+
+		return render.Html(c, UserManageEditPage(data, info, nil))
+	})
+
 	return app
 }

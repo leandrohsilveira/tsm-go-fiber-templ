@@ -10,6 +10,12 @@ type UserCreateDto struct {
 	Role            dao.UserRole `json:"role" form:"role"`
 }
 
+type UserManageEditDto struct {
+	Name  string       `json:"name" form:"name" validate:"required"`
+	Email string       `json:"email" form:"email" validate:"required,email"`
+	Role  dao.UserRole `json:"role" form:"role" validate:"required"`
+}
+
 type UserDisplayDto struct {
 	ID    string       `json:"id"`
 	Name  string       `json:"name"`
