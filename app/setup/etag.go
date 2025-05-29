@@ -6,5 +6,9 @@ import (
 )
 
 func SetupETag(app *fiber.App) {
-	app.Use(etag.New())
+	app.Use(etag.New(etag.Config{
+		Next: func(c *fiber.Ctx) bool {
+			return c.Response().StatusCode() >= 300
+		},
+	}))
 }
