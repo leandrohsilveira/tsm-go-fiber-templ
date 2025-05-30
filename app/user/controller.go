@@ -13,6 +13,7 @@ type UserController interface {
 	Create(*fiber.Ctx) (*UserDisplayDto, *util.ValidationErr, error)
 	List(*fiber.Ctx) (*util.PageResult[UserDisplayDto], error)
 	GetByID(*fiber.Ctx) (*UserDisplayDto, error)
+	Update(*fiber.Ctx) (*UserDisplayDto, *util.ValidationErr, error)
 }
 
 type userController struct {
@@ -110,4 +111,48 @@ func (controller *userController) GetByID(c *fiber.Ctx) (*UserDisplayDto, error)
 	}
 
 	return result, nil
+}
+
+func (controller *userController) Update(c *fiber.Ctx) (*UserDisplayDto, *util.ValidationErr, error) {
+	param := c.Params("id")
+
+	id, err := uuid.Parse(param)
+	if err != nil {
+		return nil, nil, fiber.NewError(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	payload := new(UserManageEditDto)
+
+	if err := c.BodyParser(payload); err != nil {
+		return nil, nil, fiber.NewError(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	validationErr, err := util.Validate(payload)
+
+	if err != nil {
+		return nil, nil, fiber.NewError(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	if validationErr != nil {
+		return nil, validationErr, nil
+	}
+
+	data, err := controller.userService.Update(c.UserContext(), id, *payload)
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if data == nil {
+		return nil, nil, nil
+	}
+
+	dto := &UserDisplayDto{
+		ID:    data.ID.String(),
+		Name:  data.Name,
+		Email: data.Email,
+		Role:  data.Role,
+	}
+
+	return dto, nil, nil
 }

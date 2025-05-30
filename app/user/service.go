@@ -11,6 +11,7 @@ import (
 
 type UserService interface {
 	Create(context.Context, UserCreateDto) (*dao.User, error)
+	Update(context.Context, uuid.UUID, UserManageEditDto) (*dao.User, error)
 	GetByEmail(context.Context, string) (*dao.User, error)
 	GetByID(context.Context, uuid.UUID) (*dao.User, error)
 	GetList(context.Context, util.PageParams) (*util.PageResult[dao.User], error)
@@ -46,6 +47,33 @@ func (self *userService) Create(ctx context.Context, payload UserCreateDto) (*da
 		Password: self.pool.Text(payload.Password),
 		Role:     role,
 	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
+}
+
+func (self *userService) Update(ctx context.Context, id uuid.UUID, payload UserManageEditDto) (*dao.User, error) {
+	queries, release, err := self.pool.Acquire(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer release()
+
+	data, err := queries.UpdateUser(ctx, dao.UpdateUserParams{
+		ID:    id,
+		Name:  payload.Name,
+		Email: payload.Email,
+		Role:  payload.Role,
+	})
+
+	if err == database.ErrNoRows {
+		return nil, nil
+	}
 
 	if err != nil {
 		return nil, err

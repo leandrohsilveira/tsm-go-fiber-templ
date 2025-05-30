@@ -4,14 +4,36 @@ import "github.com/leandrohsilveira/tsm/util"
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/guards"
 
-templ UserManageEditPage(current *UserDisplayDto, info *guards.CurrentUserDto, validationErr *util.ValidationErr) {
-	@components.PageContainerLayout("Edit user", info) {
-		@userDataForm(userDataFormProps{
-			ValidationErr: validationErr,
-			Value: userDataFormDto{
-				Name:  current.Name,
-				Email: current.Email,
-			},
-		})
+type UserManageEditPageProps struct {
+	Action          string
+	BackUrl         string
+	Value           *UserDisplayDto
+	CurrentUserInfo *guards.CurrentUserDto
+	ValidationErr   *util.ValidationErr
+}
+
+templ UserManageEditPage(props UserManageEditPageProps) {
+	@components.PageContainerLayout("Edit user", props.CurrentUserInfo) {
+		<form method="POST" action={ templ.URL(props.Action) } class="w-full flex flex-col gap-4 max-w-sm self-center">
+			@userDataForm(userDataFormProps{
+				ValidationErr: props.ValidationErr,
+				Value: userDataFormDto{
+					Name:  props.Value.Name,
+					Email: props.Value.Email,
+				},
+			})
+			@userRoleForm(userRoleFormProps{
+				Value: userRoleFormDto{Role: props.Value.Role},
+			})
+			@components.RequiredLegend()
+			<div class="flex flex-row-reverse gap-2">
+				@components.Button(components.ButtonProps{Type: "submit", Variant: components.ButtonVariantRaised}) {
+					Update
+				}
+				@components.Button(components.ButtonProps{Type: "link", Href: props.BackUrl}) {
+					Cancel
+				}
+			</div>
+		</form>
 	}
 }

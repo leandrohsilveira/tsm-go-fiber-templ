@@ -2,10 +2,15 @@ package user
 
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
+import "github.com/leandrohsilveira/tsm/dao"
 
 type userDataFormDto struct {
 	Name  string
 	Email string
+}
+
+type userRoleFormDto struct {
+	Role dao.UserRole
 }
 
 type userDataFormProps struct {
@@ -15,6 +20,10 @@ type userDataFormProps struct {
 
 type userPasswordFormProps struct {
 	ValidationErr *util.ValidationErr
+}
+
+type userRoleFormProps struct {
+	Value userRoleFormDto
 }
 
 templ userDataForm(props userDataFormProps) {
@@ -49,4 +58,20 @@ templ userPasswordForm(props userPasswordFormProps) {
 		Required: true,
 		Error:    util.GetFieldErr(props.ValidationErr, "ConfirmPassword"),
 	})
+}
+
+templ userRoleForm(props userRoleFormProps) {
+	<div class="flex w-full flex-col gap-1">
+		<span class="ml-0.5">Role</span>
+		<div class="flex w-full gap-4">
+			<label for="user_role_admin" class="flex gap-1 items-center">
+				<input type="radio" id="user_role_admin" name="role" checked?={ props.Value.Role == dao.UserRoleAdminUser } value={ dao.UserRoleAdminUser }/>
+				<span>Admin</span>
+			</label>
+			<label for="user_role_regular" class="flex gap-1 items-center">
+				<input type="radio" id="user_role_regular" name="role" checked?={ props.Value.Role == dao.UserRoleRegularUser } value={ dao.UserRoleRegularUser }/>
+				<span>Regular</span>
+			</label>
+		</div>
+	</div>
 }
