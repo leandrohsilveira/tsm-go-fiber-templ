@@ -14,7 +14,10 @@ func Pages(controller UserController) *fiber.App {
 	app := fiber.New()
 
 	app.Get("/signup", guards.AnonymousGuard, func(c *fiber.Ctx) error {
-		return render.Html(c, SignUpPage(c.Path(), nil))
+		return render.Html(c, SignUpPage(SignUpPageProps{
+			Action:  c.Path(),
+			BackUrl: "/",
+		}))
 	})
 
 	app.Post("/signup", guards.AnonymousGuard, func(c *fiber.Ctx) error {
@@ -25,7 +28,15 @@ func Pages(controller UserController) *fiber.App {
 		}
 
 		if validationErr != nil {
-			return render.Html(c, SignUpPage(c.Path(), validationErr))
+			return render.Html(c, SignUpPage(SignUpPageProps{
+				Action:        c.Path(),
+				BackUrl:       "/",
+				ValidationErr: validationErr,
+				Value: UserCreateDto{
+					Name:  validationErr.Data["Name"].(string),
+					Email: validationErr.Data["Email"].(string),
+				},
+			}))
 		}
 
 		logger := log.Ctx(c.UserContext())
