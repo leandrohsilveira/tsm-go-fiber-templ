@@ -10,10 +10,12 @@ import (
 )
 
 var AuthUsernamePasswordIncorrectErr = errors.New("Incorrect username or password")
+var AuthIncorrectCurrentPasswordErr = errors.New("Incorrect current password")
 
 type AuthService interface {
 	Login(context.Context, AuthLoginPayloadDto) (*AuthLoginResultDto, error)
 	GetCurrentUserInfo(context.Context, string) (*AuthCurrentUserInfoDto, error)
+	ChangePassword(context.Context, uuid.UUID, AuthChangeCurrentPasswordDto) (*AuthCurrentUserInfoDto, error)
 }
 
 func NewService(userService user.UserService) AuthService {
@@ -90,6 +92,51 @@ func (self *authService) GetCurrentUserInfo(ctx context.Context, token string) (
 	}
 
 	return &AuthCurrentUserInfoDto{User: dto}, nil
+}
+
+func (self *authService) ChangePassword(ctx context.Context, id uuid.UUID, payload AuthChangeCurrentPasswordDto) (*AuthCurrentUserInfoDto, error) {
+	data, err := self.userService.GetByID(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if data == nil {
+		return nil, nil
+	}
+
+	match, err := self.checkPassword(payload.CurrentPassword, data.Password.String)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !match {
+		return nil, AuthIncorrectCurrentPasswordErr
+	}
+
+	data, err = self.userService.ChangePassword(ctx, id, user.UserChangePasswordDto{
+		NewPassword: payload.NewPassword,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if data == nil {
+		return nil, nil
+	}
+
+	result := &AuthCurrentUserInfoDto{
+		User: user.UserDisplayDto{
+			ID:    data.ID.String(),
+			Name:  data.Name,
+			Email: data.Email,
+			Role:  data.Role,
+		},
+	}
+
+	return result, nil
 }
 
 func (_ *authService) checkPassword(input, hash string) (bool, error) {

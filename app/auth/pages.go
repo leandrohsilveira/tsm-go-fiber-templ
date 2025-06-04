@@ -45,6 +45,39 @@ func Pages(controller AuthController) *fiber.App {
 		return c.Redirect("/", http.StatusSeeOther)
 	})
 
+	app.Get("/auth/change-password", guards.RegularUserGuard, func(c *fiber.Ctx) error {
+		return render.Html(c, ChangeCurrentPasswordPage(ChangeCurrentPasswordPageProps{
+			CurrentUserInfo: guards.GetCurrentUser(c),
+			Action:          c.Path(),
+			BackUrl:         "/",
+		}))
+	})
+
+	app.Post("/auth/change-password", guards.RegularUserGuard, func(c *fiber.Ctx) error {
+		response, err := controller.ChangePassword(c)
+
+		if err != nil {
+			return render.Html(c, ChangeCurrentPasswordPage(ChangeCurrentPasswordPageProps{
+				CurrentUserInfo: guards.GetCurrentUser(c),
+				Action:          c.Path(),
+				BackUrl:         "/",
+				ValidationErr:   response.ValidationErr,
+				Err:             render.DefaultErr(c, err, "Update password failed"),
+			}))
+		}
+
+		if response.ValidationErr != nil {
+			return render.Html(c, ChangeCurrentPasswordPage(ChangeCurrentPasswordPageProps{
+				CurrentUserInfo: guards.GetCurrentUser(c),
+				Action:          c.Path(),
+				BackUrl:         "/",
+				ValidationErr:   response.ValidationErr,
+			}))
+		}
+
+		return c.Redirect("/", http.StatusSeeOther)
+	})
+
 	return app
 
 }

@@ -23,6 +23,17 @@ type AuthLoginResponseDto struct {
 	Result        AuthLoginResultDto
 }
 
+type AuthChangeCurrentPasswordDto struct {
+	CurrentPassword string `json:"current_password" form:"current_password" validate:"required"`
+	NewPassword     string `json:"new_password" form:"new_password" validate:"required,min=6"`
+	ConfirmPassword string `json:"confirm_password" form:"confirm_password" validate:"required,eqfield=NewPassword"`
+}
+
+type AuthChangeCurrentPasswordResponseDto struct {
+	Payload       AuthChangeCurrentPasswordDto
+	ValidationErr *util.ValidationErr
+}
+
 type AuthCurrentUserInfoDto struct {
 	User user.UserDisplayDto `json:"user"`
 }
