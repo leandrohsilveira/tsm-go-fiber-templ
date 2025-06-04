@@ -10,8 +10,9 @@ import (
 )
 
 type UserService interface {
-	Create(context.Context, UserCreateDto) (*dao.User, error)
-	Update(context.Context, uuid.UUID, UserManageEditDto) (*dao.User, error)
+	Create(context.Context, UserCreatePayloadDto) (*dao.User, error)
+	Update(context.Context, uuid.UUID, UserManageEditPayloadDto) (*dao.User, error)
+	ChangePassword(context.Context, uuid.UUID, UserChangePasswordDto) (*dao.User, error)
 	GetByEmail(context.Context, string) (*dao.User, error)
 	GetByID(context.Context, uuid.UUID) (*dao.User, error)
 	GetList(context.Context, util.PageParams) (*util.PageResult[dao.User], error)
@@ -27,7 +28,7 @@ func NewService(pool database.DatabasePool) UserService {
 	return &userService{pool: pool}
 }
 
-func (self *userService) Create(ctx context.Context, payload UserCreateDto) (*dao.User, error) {
+func (self *userService) Create(ctx context.Context, payload UserCreatePayloadDto) (*dao.User, error) {
 	queries, release, err := self.pool.Acquire(ctx)
 
 	if err != nil {
@@ -55,7 +56,7 @@ func (self *userService) Create(ctx context.Context, payload UserCreateDto) (*da
 	return &data, nil
 }
 
-func (self *userService) Update(ctx context.Context, id uuid.UUID, payload UserManageEditDto) (*dao.User, error) {
+func (self *userService) Update(ctx context.Context, id uuid.UUID, payload UserManageEditPayloadDto) (*dao.User, error) {
 	queries, release, err := self.pool.Acquire(ctx)
 
 	if err != nil {
@@ -69,6 +70,31 @@ func (self *userService) Update(ctx context.Context, id uuid.UUID, payload UserM
 		Name:  payload.Name,
 		Email: payload.Email,
 		Role:  payload.Role,
+	})
+
+	if err == database.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
+}
+
+func (self *userService) ChangePassword(ctx context.Context, id uuid.UUID, payload UserChangePasswordDto) (*dao.User, error) {
+	queries, release, err := self.pool.Acquire(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer release()
+
+	data, err := queries.UpdateUserPassword(ctx, dao.UpdateUserPasswordParams{
+		ID:       id,
+		Password: self.pool.Text(payload.NewPassword),
 	})
 
 	if err == database.ErrNoRows {

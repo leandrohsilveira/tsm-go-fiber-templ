@@ -10,10 +10,14 @@ type UserManageEditPageProps struct {
 	Value           *UserDisplayDto
 	CurrentUserInfo *guards.CurrentUserDto
 	ValidationErr   *util.ValidationErr
+	Err             error
 }
 
 templ UserManageEditPage(props UserManageEditPageProps) {
 	@components.PageContainerLayout("Edit user", props.CurrentUserInfo) {
+		if props.Err != nil {
+			@components.Error(props.Err.Error())
+		}
 		<form method="POST" action={ templ.URL(props.Action) } class="w-full flex flex-col gap-4 max-w-sm self-center">
 			@userDataForm(userDataFormProps{
 				ValidationErr: props.ValidationErr,

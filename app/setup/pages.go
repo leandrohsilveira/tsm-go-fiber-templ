@@ -21,6 +21,6 @@ func SetupPages(ctx context.Context, app *fiber.App) {
 	app.Static("/public", "./public")
 	app.Use(auth.AuthMiddleware(authController))
 	app.Mount("/", home.Pages())
+	app.Mount("/", auth.Pages(authController))
 	app.Mount("/user", user.Pages(userController))
-	app.Mount("/login", auth.Pages(authController))
 }

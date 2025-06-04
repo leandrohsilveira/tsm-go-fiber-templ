@@ -4,14 +4,18 @@ import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
 
 type SignUpPageProps struct {
-	Value         UserCreateDto
+	Value         UserCreatePayloadDto
 	Action        string
 	BackUrl       string
 	ValidationErr *util.ValidationErr
+	Err           error
 }
 
 templ SignUpPage(props SignUpPageProps) {
 	@components.CenterLayout("Sign Up") {
+		if props.Err != nil {
+			@components.Error(props.Err.Error())
+		}
 		<form action={ templ.URL(props.Action) } method="POST" class="flex flex-col gap-4 w-sm">
 			@userDataForm(userDataFormProps{
 				Value: userDataFormDto{

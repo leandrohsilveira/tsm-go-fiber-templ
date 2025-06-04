@@ -1,10 +1,11 @@
 package user
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/leandrohsilveira/tsm/dao"
+	"github.com/leandrohsilveira/tsm/components"
 	"github.com/leandrohsilveira/tsm/guards"
 	"github.com/leandrohsilveira/tsm/render"
 	"github.com/rs/zerolog/log"
@@ -21,28 +22,37 @@ func Pages(controller UserController) *fiber.App {
 	})
 
 	app.Post("/signup", guards.AnonymousGuard, func(c *fiber.Ctx) error {
-		_, validationErr, err := controller.Create(c)
+		response, err := controller.Create(c)
 
-		if err != nil {
-			return err
+		if err != nil && response.Payload == nil {
+			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+				Err:     render.DefaultErr(c, err, "Unable to parse sign-up request payload"),
+				BackUrl: "/signup",
+			}))
 		}
 
-		if validationErr != nil {
+		if err != nil {
+			return render.Html(c, SignUpPage(SignUpPageProps{
+				Action:  c.Path(),
+				BackUrl: "/",
+				Err:     render.DefaultErr(c, err, "User sign-up failed"),
+				Value:   *response.Payload,
+			}))
+		}
+
+		if response.ValidationErr != nil {
 			return render.Html(c, SignUpPage(SignUpPageProps{
 				Action:        c.Path(),
 				BackUrl:       "/",
-				ValidationErr: validationErr,
-				Value: UserCreateDto{
-					Name:  validationErr.Data["Name"].(string),
-					Email: validationErr.Data["Email"].(string),
-				},
+				ValidationErr: response.ValidationErr,
+				Value:         *response.Payload,
 			}))
 		}
 
 		logger := log.Ctx(c.UserContext())
-		logger.Info().Msg("Create user form submitted")
+		logger.Info().Msg("User sign-up successful")
 
-		return c.Redirect("/", http.StatusMovedPermanently)
+		return c.Redirect("/", http.StatusSeeOther)
 	})
 
 	app.Get("/manage", guards.AdminUserGuard, func(c *fiber.Ctx) error {
@@ -51,7 +61,10 @@ func Pages(controller UserController) *fiber.App {
 		result, err := controller.List(c)
 
 		if err != nil {
-			return err
+			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+				Info: info,
+				Err:  render.DefaultErr(c, err, "Unable to load users list"),
+			}))
 		}
 
 		return render.Html(c, UserManagePage(result.Items, info))
@@ -63,7 +76,19 @@ func Pages(controller UserController) *fiber.App {
 		data, err := controller.GetByID(c)
 
 		if err != nil {
-			return err
+			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+				Info:    info,
+				Err:     render.DefaultErr(c, err, "Unable to load user data"),
+				BackUrl: "../manage",
+			}))
+		}
+
+		if data == nil {
+			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+				Info:    info,
+				Err:     errors.New("User not found"),
+				BackUrl: "../manage",
+			}))
 		}
 
 		return render.Html(c, UserManageEditPage(UserManageEditPageProps{
@@ -77,28 +102,50 @@ func Pages(controller UserController) *fiber.App {
 	app.Post("/manage/:id", guards.AdminUserGuard, func(c *fiber.Ctx) error {
 		info := guards.GetCurrentUser(c)
 
-		data, validationErr, err := controller.Update(c)
+		response, err := controller.Update(c)
 
-		if err != nil {
-			return err
-		}
-
-		if validationErr != nil {
-			return render.Html(c, UserManageEditPage(UserManageEditPageProps{
-				Value: &UserDisplayDto{
-					Name:  validationErr.Data["Name"].(string),
-					Email: validationErr.Data["Email"].(string),
-					Role:  validationErr.Data["Role"].(dao.UserRole),
-				},
-				CurrentUserInfo: info,
-				Action:          c.Path(),
-				ValidationErr:   validationErr,
-				BackUrl:         "../manage",
+		if err != nil && response.Payload == nil {
+			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+				Err:     render.DefaultErr(c, err, "Unable to parse update user request payload"),
+				Info:    info,
+				BackUrl: c.Path(),
 			}))
 		}
 
-		if data == nil {
-			return c.Redirect("../manage", http.StatusSeeOther)
+		if err != nil {
+			return render.Html(c, UserManageEditPage(UserManageEditPageProps{
+				Err:             err,
+				CurrentUserInfo: info,
+				Action:          c.Path(),
+				BackUrl:         "../manage",
+				Value: &UserDisplayDto{
+					Name:  response.Payload.Name,
+					Email: response.Payload.Email,
+					Role:  response.Payload.Role,
+				},
+			}))
+		}
+
+		if response.ValidationErr != nil {
+			return render.Html(c, UserManageEditPage(UserManageEditPageProps{
+				CurrentUserInfo: info,
+				Action:          c.Path(),
+				ValidationErr:   response.ValidationErr,
+				BackUrl:         "../manage",
+				Value: &UserDisplayDto{
+					Name:  response.Payload.Name,
+					Email: response.Payload.Email,
+					Role:  response.Payload.Role,
+				},
+			}))
+		}
+
+		if response.Result == nil {
+			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+				Err:     errors.New("Unable to update an user that does not exists"),
+				Info:    info,
+				BackUrl: "../manage",
+			}))
 		}
 
 		return c.Redirect("../manage", http.StatusSeeOther)

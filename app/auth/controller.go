@@ -6,7 +6,7 @@ import (
 )
 
 type AuthController interface {
-	Login(*fiber.Ctx) (*AuthLoginResultDto, *util.ValidationErr, error)
+	Login(*fiber.Ctx) (*AuthLoginResponseDto, error)
 	GetCurrentUser(*fiber.Ctx) (*AuthCurrentUserInfoDto, error)
 }
 
@@ -18,30 +18,30 @@ func NewController(authService AuthService) AuthController {
 	return &authController{authService: authService}
 }
 
-func (self *authController) Login(c *fiber.Ctx) (*AuthLoginResultDto, *util.ValidationErr, error) {
+func (self *authController) Login(c *fiber.Ctx) (*AuthLoginResponseDto, error) {
 	payload := new(AuthLoginPayloadDto)
 
 	if err := c.BodyParser(payload); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	validationErr, err := util.Validate(payload)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	if validationErr != nil {
-		return nil, validationErr, nil
+		return &AuthLoginResponseDto{ValidationErr: validationErr, Payload: *payload}, nil
 	}
 
 	result, err := self.authService.Login(c.Context(), *payload)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return result, nil, nil
+	return &AuthLoginResponseDto{Result: *result, Payload: *payload}, nil
 }
 
 func (self *authController) GetCurrentUser(c *fiber.Ctx) (*AuthCurrentUserInfoDto, error) {

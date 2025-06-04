@@ -1,0 +1,23 @@
+package components
+
+import "github.com/leandrohsilveira/tsm/guards"
+
+type ErrorPageProps struct {
+	Info    *guards.CurrentUserDto
+	Err     error
+	BackUrl string
+}
+
+templ ErrorPage(props ErrorPageProps) {
+	@Navbar(NavbarProps{Info: props.Info, Class: "fixed top-0 left-0 right-0"})
+	@CenterLayout("Error") {
+		<h2 class="text-xl text-error w-full text-center">{ props.Err.Error() }</h2>
+		if props.BackUrl != "" {
+			<div class="w-full flex justify-center">
+				@Button(ButtonProps{Type: "link", Href: props.BackUrl, Variant: ButtonVariantSoft}) {
+					Go back
+				}
+			</div>
+		}
+	}
+}

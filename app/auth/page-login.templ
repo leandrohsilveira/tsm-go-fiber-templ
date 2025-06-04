@@ -3,18 +3,25 @@ package auth
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
 
-templ LoginPage(action string, validationErr *util.ValidationErr, err error) {
+type LoginPageProps struct {
+	Action        string
+	Value         AuthLoginPayloadDto
+	ValidationErr *util.ValidationErr
+	Err           error
+}
+
+templ LoginPage(props LoginPageProps) {
 	@components.CenterLayout("Sign-in") {
-		if err != nil {
-			@components.Error(err.Error())
+		if props.Err != nil {
+			@components.Error(props.Err.Error())
 		}
-		<form action={ templ.URL(action) } method="POST" class="flex flex-col gap-4">
+		<form action={ templ.URL(props.Action) } method="POST" class="flex flex-col gap-4">
 			@components.Field(components.FieldProps{
 				Name:     "username",
 				Type:     "email",
 				Label:    "E-mail",
-				Value:    util.GetErrDataStr(validationErr, "Username"),
-				Error:    util.GetFieldErr(validationErr, "Username"),
+				Value:    props.Value.Username,
+				Error:    util.GetFieldErr(props.ValidationErr, "Username"),
 				Required: true,
 				Index:    0,
 				Attrs: templ.Attributes{
@@ -25,8 +32,8 @@ templ LoginPage(action string, validationErr *util.ValidationErr, err error) {
 				Name:     "password",
 				Type:     "password",
 				Label:    "Password",
-				Value:    util.GetErrDataStr(validationErr, "Password"),
-				Error:    util.GetFieldErr(validationErr, "Password"),
+				Value:    props.Value.Password,
+				Error:    util.GetFieldErr(props.ValidationErr, "Password"),
 				Required: true,
 				Index:    0,
 				Attrs: templ.Attributes{

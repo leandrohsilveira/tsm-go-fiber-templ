@@ -1,0 +1,28 @@
+package components
+
+import "github.com/leandrohsilveira/tsm/guards"
+
+type NavbarProps struct {
+	Info  *guards.CurrentUserDto
+	Class string
+}
+
+templ Navbar(props NavbarProps) {
+	<nav class={ "w-full p-4 bg-primary text-on-primary flex items-center justify-center", props.Class }>
+		<header class="flex w-full max-w-5xl gap-4 items-center justify-between">
+			<h1>TSM</h1>
+			if props.Info != nil {
+				<div>Current user: { props.Info.Name }</div>
+			} else {
+				@Button(ButtonProps{
+					Type:    "link",
+					Variant: ButtonVariantClean,
+					Href:    "/login",
+					Index:   0,
+				}) {
+					Login
+				}
+			}
+		</header>
+	</nav>
+}

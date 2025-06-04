@@ -5,23 +5,7 @@ import "github.com/leandrohsilveira/tsm/guards"
 
 templ PageContainerLayout(title string, info *guards.CurrentUserDto) {
 	@Html(fmt.Sprintf("TSM - %s", title)) {
-		<nav class="w-full p-4 bg-primary text-on-primary flex items-center justify-center">
-			<header class="flex w-full max-w-5xl gap-4 items-center justify-between">
-				<h1>TSM</h1>
-				if info != nil {
-					<div>Current user: { info.Name }</div>
-				} else {
-					@Button(ButtonProps{
-						Type:    "link",
-						Variant: ButtonVariantClean,
-						Href:    "/login",
-						Index:   0,
-					}) {
-						Login
-					}
-				}
-			</header>
-		</nav>
+		@Navbar(NavbarProps{Info: info})
 		<main class="w-full px-4 flex flex-col items-center gap-4">
 			<header class="flex border-b border-solid border-b-foreground w-full max-w-5xl">
 				<h2>{ title }</h2>
