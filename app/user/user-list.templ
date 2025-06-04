@@ -19,7 +19,7 @@ templ userList(users []UserDisplayDto) {
 templ userListItem(user UserDisplayDto) {
 	{{ href := fmt.Sprintf("./manage/%s", user.ID) }}
 	@components.ListItem(components.ListItemProps{Selectable: true}) {
-		<a href={ templ.URL(href) } class="flex flex-col gap-2 w-full focus-visible:outline-none">
+		<a href={ templ.URL(href) } class="flex flex-col gap-2 w-full focus-visible:outline-none p-2">
 			<strong>{ user.Name }</strong>
 			<div class="flex gap-2">
 				@userRole(user)
