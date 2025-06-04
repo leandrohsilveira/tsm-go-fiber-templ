@@ -7,5 +7,5 @@ import (
 )
 
 func redirectLogin(c *fiber.Ctx) error {
-	return c.Redirect("/login", http.StatusTemporaryRedirect)
+	return c.Redirect("/login", http.StatusSeeOther)
 }

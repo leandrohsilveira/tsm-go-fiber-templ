@@ -13,5 +13,5 @@ func AnonymousGuard(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	return c.Redirect("/", http.StatusTemporaryRedirect)
+	return c.Redirect("/", http.StatusSeeOther)
 }
