@@ -12,23 +12,23 @@ func Pages(controller AuthController) *fiber.App {
 	app := fiber.New()
 
 	app.Get("/login", guards.AnonymousGuard, func(c *fiber.Ctx) error {
-		return render.Html(c, LoginPage(LoginPageProps{Action: c.Path()}))
+		return render.Html(c, LoginPage(LoginPageProps{Action: c.OriginalURL()}))
 	})
 
 	app.Post("/login", guards.AnonymousGuard, func(c *fiber.Ctx) error {
 		response, err := controller.Login(c)
 
 		if err == AuthUsernamePasswordIncorrectErr {
-			return render.Html(c, LoginPage(LoginPageProps{Action: c.Path(), Err: err}))
+			return render.Html(c, LoginPage(LoginPageProps{Action: c.OriginalURL(), Err: err}))
 		}
 
 		if err != nil {
-			return render.Html(c, LoginPage(LoginPageProps{Action: c.Path(), Err: render.DefaultErr(c, err, "Authentication failed")}))
+			return render.Html(c, LoginPage(LoginPageProps{Action: c.OriginalURL(), Err: render.DefaultErr(c, err, "Authentication failed")}))
 		}
 
 		if response.ValidationErr != nil {
 			return render.Html(c, LoginPage(LoginPageProps{
-				Action:        c.Path(),
+				Action:        c.OriginalURL(),
 				ValidationErr: response.ValidationErr,
 				Value:         response.Payload,
 			}))
@@ -42,6 +42,11 @@ func Pages(controller AuthController) *fiber.App {
 			Secure:   true,
 		})
 
+		return c.Redirect(c.Query("next", "/"), http.StatusSeeOther)
+	})
+
+	app.Get("/logout", func(c *fiber.Ctx) error {
+		c.ClearCookie("Authorization")
 		return c.Redirect("/", http.StatusSeeOther)
 	})
 
