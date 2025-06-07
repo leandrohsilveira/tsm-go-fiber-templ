@@ -30,8 +30,8 @@ type ListItemProps struct {
 
 templ ListItem(props ListItemProps) {
 	<li
-		class={ "bg-background-highlight rounded-lg",
-    templ.KV("hover:bg-background-highlight/70 outline outline-solid outline-transparent has-[a[href]:focus-visible]:outline-primary cursor-pointer", props.Selectable),
+		class={ "bg-muted rounded-lg",
+    templ.KV("hover:bg-muted/70 outline outline-solid outline-transparent has-[a[href]:focus-visible]:outline-primary cursor-pointer", props.Selectable),
     props.Class }
 	>
 		{ children... }

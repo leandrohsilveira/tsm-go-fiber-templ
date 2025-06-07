@@ -2,6 +2,7 @@ package auth
 
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
+import "github.com/leandrohsilveira/tsm/components/button"
 
 type LoginPageProps struct {
 	Action        string
@@ -40,10 +41,10 @@ templ LoginPage(props LoginPageProps) {
 					"autocomplete": "current-password",
 				},
 			})
-			@components.Button(components.ButtonProps{
-				Type:    "submit",
-				Variant: components.ButtonVariantRaised,
-				Index:   0,
+			@components.RequiredLegend()
+			@button.Button(button.Props{
+				Type:       button.TypeSubmit,
+				Attributes: templ.Attributes{"tabindex": "0"},
 			}) {
 				Login
 			}

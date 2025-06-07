@@ -1,5 +1,11 @@
 package components
 
+import "github.com/leandrohsilveira/tsm/components/input"
+import "github.com/leandrohsilveira/tsm/components/popover"
+import "github.com/leandrohsilveira/tsm/components/dropdown"
+import "github.com/leandrohsilveira/tsm/components/label"
+import "github.com/leandrohsilveira/tsm/components/drawer"
+
 type HtmlProps struct {
 	Title string
 }
@@ -15,6 +21,11 @@ templ Html(title string) {
 		</head>
 		<body class="w-full flex flex-col gap-4">
 			{ children... }
+			@label.Script()
+			@input.Script()
+			@popover.Script()
+			@dropdown.Script()
+			@drawer.Script()
 		</body>
 	</html>
 }

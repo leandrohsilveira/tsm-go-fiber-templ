@@ -1,7 +1,16 @@
 package components
 
+import "github.com/leandrohsilveira/tsm/components/alert"
+import "github.com/leandrohsilveira/tsm/components/icon"
+
 templ Error(message string) {
-	<div class="bg-error/70 text-on-error rounded-md p-2 flex items-center justify-center">
-		{ message }
-	</div>
+	@alert.Alert(alert.Props{Variant: alert.VariantDestructive}) {
+		@icon.TriangleAlert(icon.Props{Size: 16})
+		@alert.Title() {
+			Error
+		}
+		@alert.Description() {
+			{ message }
+		}
+	}
 }

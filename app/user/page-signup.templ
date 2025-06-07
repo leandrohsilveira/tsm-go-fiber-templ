@@ -2,6 +2,7 @@ package user
 
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
+import "github.com/leandrohsilveira/tsm/components/button"
 
 type SignUpPageProps struct {
 	Value         UserCreatePayloadDto
@@ -27,10 +28,10 @@ templ SignUpPage(props SignUpPageProps) {
 			@userPasswordForm(userPasswordFormProps{ValidationErr: props.ValidationErr})
 			@components.RequiredLegend()
 			<div class="flex flex-row-reverse gap-2">
-				@components.Button(components.ButtonProps{Type: "submit", Variant: components.ButtonVariantRaised}) {
+				@button.Button(button.Props{Type: button.TypeSubmit, Attributes: templ.Attributes{"tabindex": "0"}}) {
 					Sign-up
 				}
-				@components.Button(components.ButtonProps{Type: "link", Href: props.BackUrl}) {
+				@button.Button(button.Props{Href: props.BackUrl, Variant: button.VariantSecondary, Attributes: templ.Attributes{"tabindex": "0"}}) {
 					Cancel
 				}
 			</div>

@@ -3,6 +3,7 @@ module github.com/leandrohsilveira/tsm
 go 1.24.3
 
 require (
+	github.com/Oudwins/tailwind-merge-go v0.2.1
 	github.com/a-h/templ v0.3.865
 	github.com/fatih/structs v1.1.0
 	github.com/go-playground/validator/v10 v10.26.0

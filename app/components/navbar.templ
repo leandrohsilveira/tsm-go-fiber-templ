@@ -1,6 +1,9 @@
 package components
 
 import "github.com/leandrohsilveira/tsm/guards"
+import "github.com/leandrohsilveira/tsm/components/button"
+import "github.com/leandrohsilveira/tsm/components/dropdown"
+import "github.com/leandrohsilveira/tsm/components/icon"
 
 type NavbarProps struct {
 	Info  *guards.CurrentUserDto
@@ -8,17 +11,39 @@ type NavbarProps struct {
 }
 
 templ Navbar(props NavbarProps) {
-	<nav class={ "w-full p-4 bg-primary text-on-primary flex items-center justify-center", props.Class }>
+	<nav class={ "w-full p-4 bg-primary text-primary-foreground flex items-center justify-center", props.Class }>
 		<header class="flex w-full max-w-5xl gap-4 items-center justify-between">
 			<h1>TSM</h1>
 			if props.Info != nil {
-				<div>Current user: { props.Info.Name }</div>
+				@dropdown.Dropdown() {
+					@dropdown.Trigger() {
+						@button.Button(button.Props{
+							Class:      "flex gap-2 items-center",
+							Attributes: templ.Attributes{"tabindex": "0"},
+						}) {
+							@icon.CircleUserRound()
+							{ props.Info.Name }
+						}
+					}
+					@dropdown.Content(dropdown.ContentProps{
+						Width: "w-20",
+					}) {
+						@dropdown.Label() {
+							My Account
+						}
+						@dropdown.Separator()
+						@dropdown.Group() {
+							@dropdown.Item(dropdown.ItemProps{Class: "flex items-center justify-start gap-2 cursor-pointer", Href: "/logout"}) {
+								@icon.LogOut(icon.Props{Size: 16})
+								Log out
+							}
+						}
+					}
+				}
 			} else {
-				@Button(ButtonProps{
-					Type:    "link",
-					Variant: ButtonVariantClean,
-					Href:    "/login",
-					Index:   0,
+				@button.Button(button.Props{
+					Href:       "/login",
+					Attributes: templ.Attributes{"tabindex": "0"},
 				}) {
 					Login
 				}

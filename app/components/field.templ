@@ -22,11 +22,11 @@ script handleInput(event templ.JSExpression) {
 templ Field(props FieldProps) {
 	{{ hasErrors := props.Error != "" }}
 	<div class="group flex w-full flex-col gap-2" data-show-errors?={ hasErrors } data-required?={ props.Required }>
-		<label for={ props.Name } class="text-foreground pl-0.5 group-data-required:after:text-error after:m-0.5 group-data-required:after:content-['*']">{ props.Label }</label>
+		<label for={ props.Name } class="text-foreground pl-0.5 group-data-required:after:text-destructive after:m-0.5 group-data-required:after:content-['*']">{ props.Label }</label>
 		<input
 			class={
 				"w-full p-2 rounded-md border border-solid border-foreground text-foreground placeholder:text-foreground/30",
-				"focus:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-primary group-data-show-errors:border-error",
+				"focus:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-primary group-data-show-errors:border-destructive",
 				props.Class,
 			}
 			id={ props.Name }
@@ -39,11 +39,11 @@ templ Field(props FieldProps) {
 			{ props.Attrs... }
 		/>
 		if props.Error != "" {
-			<div class="hidden pl-0.5 text-error group-data-show-errors:flex">{ props.Error }</div>
+			<div class="hidden pl-0.5 text-destructive group-data-show-errors:flex">{ props.Error }</div>
 		}
 	</div>
 }
 
 templ RequiredLegend() {
-	<div class="before:text-error before:mr-0.5 before:content-['*'] text-xs before:text-base">Required field</div>
+	<div class="before:text-destructive before:mr-0.5 before:content-['*'] text-xs before:text-base">Required field</div>
 }
