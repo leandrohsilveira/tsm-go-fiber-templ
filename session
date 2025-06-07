@@ -1,0 +1,8 @@
+new_tab IDE
+launch devbox run nvim
+
+new_tab Server
+launch devbox run start
+
+new_tab Shell
+launch devbox shell
