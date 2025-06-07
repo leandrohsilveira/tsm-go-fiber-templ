@@ -25,11 +25,19 @@ templ Navbar(props NavbarProps) {
 							{ props.Info.Name }
 						}
 					}
-					@dropdown.Content(dropdown.ContentProps{
-						Width: "w-20",
-					}) {
+					@dropdown.Content() {
 						@dropdown.Label() {
 							My Account
+						}
+						@dropdown.Group() {
+							@dropdown.Label(dropdown.LabelProps{Class: "flex items-center justify-start gap-2 font-normal"}) {
+								@icon.IdCard(icon.Props{Size: 16})
+								{ props.Info.Name }
+							}
+							@dropdown.Label(dropdown.LabelProps{Class: "flex items-center justify-start gap-2 font-normal"}) {
+								@icon.AtSign(icon.Props{Size: 16})
+								{ props.Info.Email }
+							}
 						}
 						@dropdown.Separator()
 						@dropdown.Group() {
