@@ -4,7 +4,10 @@ import "github.com/leandrohsilveira/tsm/guards"
 import "github.com/leandrohsilveira/tsm/components"
 
 templ UserManagePage(users []UserDisplayDto, info *guards.CurrentUserDto) {
-	@components.PageContainerLayout("Manage users", info) {
+	@components.PageContainerLayout(components.PageContainerLayoutProps{
+		Info:  info,
+		Title: "Manage users",
+	}) {
 		@userList(users)
 	}
 }

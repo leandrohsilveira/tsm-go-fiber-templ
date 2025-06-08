@@ -15,7 +15,10 @@ type UserManageEditPageProps struct {
 }
 
 templ UserManageEditPage(props UserManageEditPageProps) {
-	@components.PageContainerLayout("Edit user", props.CurrentUserInfo) {
+	@components.PageContainerLayout(components.PageContainerLayoutProps{
+		Title: "Edit user",
+		Info:  props.CurrentUserInfo,
+	}) {
 		if props.Err != nil {
 			@components.Error(props.Err.Error())
 		}

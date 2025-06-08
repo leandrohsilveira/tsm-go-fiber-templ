@@ -2,11 +2,65 @@ package home
 
 import "github.com/leandrohsilveira/tsm/guards"
 import "github.com/leandrohsilveira/tsm/components"
+import "github.com/leandrohsilveira/tsm/components/button"
+import "github.com/leandrohsilveira/tsm/components/card"
 
 templ HomePage(info *guards.CurrentUserDto) {
-	@components.PageContainerLayout("Home", info) {
-		<div class="w-full flex flex-col items-center justify-center">
-			<h1>Welcome</h1>
+	@components.PageContainerLayout(components.PageContainerLayoutProps{
+		Title:     "Home",
+		Info:      info,
+		HideTitle: true,
+	}) {
+		<div class="w-full flex flex-col items-center justify-center gap-4">
+			<h1>Welcome to TSM</h1>
+			<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+				@card.Card() {
+					@card.Header() {
+						@card.Title() {
+							Manage Users
+						}
+					}
+					@card.Content() {
+						View and manage all users in the system
+					}
+					@card.Footer() {
+						@button.Button(button.Props{Href: "/user/manage", Variant: button.VariantSecondary}) {
+							Go to Users 
+						}
+					}
+				}
+				@card.Card() {
+					@card.Header() {
+						@card.Title() {
+							Manage Companies
+						}
+					}
+					@card.Content() {
+						View and manage company information
+					}
+					@card.Footer() {
+						@button.Button(button.Props{Href: "/companies/manage", Variant: button.VariantSecondary}) {
+							Go to Companies
+						}
+					}
+				}
+				@card.Card() {
+					@card.Header() {
+						@card.Title() {
+							Manage Timesheets
+						}
+					}
+					@card.Content() {
+						View and manage timesheet data
+					}
+					@card.Footer() {
+						@button.Button(button.Props{Href: "/timesheets/manage", Variant: button.VariantSecondary}) {
+							Go to Timesheets
+						}
+					}
+				}
+			</div>
+			<p class="mt-8 text-sm text-gray-500">© 2025 TSM Application. All rights reserved.</p>
 		</div>
 	}
 }
