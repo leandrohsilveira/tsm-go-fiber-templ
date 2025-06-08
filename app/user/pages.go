@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/leandrohsilveira/tsm/components"
+	"github.com/leandrohsilveira/tsm/components/layout"
 	"github.com/leandrohsilveira/tsm/guards"
 	"github.com/leandrohsilveira/tsm/render"
 	"github.com/rs/zerolog/log"
@@ -25,7 +25,7 @@ func Pages(controller UserController) *fiber.App {
 		response, err := controller.Create(c)
 
 		if err != nil && response.Payload == nil {
-			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+			return render.Html(c, layout.Error(layout.ErrorProps{
 				Err:     render.DefaultErr(c, err, "Unable to parse sign-up request payload"),
 				BackUrl: "/signup",
 			}))
@@ -61,7 +61,7 @@ func Pages(controller UserController) *fiber.App {
 		result, err := controller.List(c)
 
 		if err != nil {
-			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+			return render.Html(c, layout.Error(layout.ErrorProps{
 				Info: info,
 				Err:  render.DefaultErr(c, err, "Unable to load users list"),
 			}))
@@ -76,7 +76,7 @@ func Pages(controller UserController) *fiber.App {
 		data, err := controller.GetByID(c)
 
 		if err != nil {
-			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+			return render.Html(c, layout.Error(layout.ErrorProps{
 				Info:    info,
 				Err:     render.DefaultErr(c, err, "Unable to load user data"),
 				BackUrl: "../manage",
@@ -84,7 +84,7 @@ func Pages(controller UserController) *fiber.App {
 		}
 
 		if data == nil {
-			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+			return render.Html(c, layout.Error(layout.ErrorProps{
 				Info:    info,
 				Err:     errors.New("User not found"),
 				BackUrl: "../manage",
@@ -105,7 +105,7 @@ func Pages(controller UserController) *fiber.App {
 		response, err := controller.Update(c)
 
 		if err != nil && response.Payload == nil {
-			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+			return render.Html(c, layout.Error(layout.ErrorProps{
 				Err:     render.DefaultErr(c, err, "Unable to parse update user request payload"),
 				Info:    info,
 				BackUrl: c.Path(),
@@ -141,7 +141,7 @@ func Pages(controller UserController) *fiber.App {
 		}
 
 		if response.Result == nil {
-			return render.Html(c, components.ErrorPage(components.ErrorPageProps{
+			return render.Html(c, layout.Error(layout.ErrorProps{
 				Err:     errors.New("Unable to update an user that does not exists"),
 				Info:    info,
 				BackUrl: "../manage",

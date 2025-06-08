@@ -1,0 +1,24 @@
+package layout
+
+import "fmt"
+import "github.com/leandrohsilveira/tsm/components"
+
+type CenterProps struct {
+	Title     string
+	HideTitle bool
+}
+
+templ Center(props CenterProps) {
+	@components.Html(fmt.Sprintf("TSM - %s", props.Title)) {
+		<main class="w-full flex flex-col items-center justify-center gap-4 h-lvh">
+			if !props.HideTitle {
+				<header class="flex items-center">
+					<h1>{ props.Title }</h1>
+				</header>
+			}
+			<div class="flex flex-col gap-4 w-sm">
+				{ children... }
+			</div>
+		</main>
+	}
+}

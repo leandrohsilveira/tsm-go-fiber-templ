@@ -4,6 +4,7 @@ import "github.com/leandrohsilveira/tsm/util"
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/guards"
 import "github.com/leandrohsilveira/tsm/components/button"
+import "github.com/leandrohsilveira/tsm/components/layout"
 
 type UserManageEditPageProps struct {
 	Action          string
@@ -15,7 +16,7 @@ type UserManageEditPageProps struct {
 }
 
 templ UserManageEditPage(props UserManageEditPageProps) {
-	@components.PageContainerLayout(components.PageContainerLayoutProps{
+	@layout.Page(layout.PageProps{
 		Title: "Edit user",
 		Info:  props.CurrentUserInfo,
 	}) {

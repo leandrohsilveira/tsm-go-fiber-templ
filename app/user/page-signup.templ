@@ -3,6 +3,7 @@ package user
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
 import "github.com/leandrohsilveira/tsm/components/button"
+import "github.com/leandrohsilveira/tsm/components/layout"
 
 type SignUpPageProps struct {
 	Value         UserCreatePayloadDto
@@ -13,7 +14,7 @@ type SignUpPageProps struct {
 }
 
 templ SignUpPage(props SignUpPageProps) {
-	@components.CenterLayout("Sign Up") {
+	@layout.Center(layout.CenterProps{Title: "Sign Up"}) {
 		if props.Err != nil {
 			@components.Error(props.Err.Error())
 		}

@@ -3,6 +3,7 @@ package auth
 import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/util"
 import "github.com/leandrohsilveira/tsm/components/button"
+import "github.com/leandrohsilveira/tsm/components/layout"
 
 type LoginPageProps struct {
 	Action        string
@@ -12,7 +13,7 @@ type LoginPageProps struct {
 }
 
 templ LoginPage(props LoginPageProps) {
-	@components.CenterLayout("Sign-in") {
+	@layout.Center(layout.CenterProps{Title: "Sign-in"}) {
 		if props.Err != nil {
 			@components.Error(props.Err.Error())
 		}

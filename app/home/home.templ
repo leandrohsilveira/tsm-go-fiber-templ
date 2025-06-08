@@ -1,12 +1,12 @@
 package home
 
 import "github.com/leandrohsilveira/tsm/guards"
-import "github.com/leandrohsilveira/tsm/components"
 import "github.com/leandrohsilveira/tsm/components/button"
 import "github.com/leandrohsilveira/tsm/components/card"
+import "github.com/leandrohsilveira/tsm/components/layout"
 
 templ HomePage(info *guards.CurrentUserDto) {
-	@components.PageContainerLayout(components.PageContainerLayoutProps{
+	@layout.Page(layout.PageProps{
 		Title:     "Home",
 		Info:      info,
 		HideTitle: true,

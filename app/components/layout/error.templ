@@ -1,17 +1,17 @@
-package components
+package layout
 
 import "github.com/leandrohsilveira/tsm/guards"
 import "github.com/leandrohsilveira/tsm/components/button"
 
-type ErrorPageProps struct {
+type ErrorProps struct {
 	Info    *guards.CurrentUserDto
 	Err     error
 	BackUrl string
 }
 
-templ ErrorPage(props ErrorPageProps) {
-	@Navbar(NavbarProps{Info: props.Info, Class: "fixed top-0 left-0 right-0"})
-	@CenterLayout("Error") {
+templ Error(props ErrorProps) {
+	@Center(CenterProps{Title: "Error", HideTitle: true}) {
+		@Navbar(NavbarProps{Info: props.Info, Class: "fixed top-0 left-0 right-0"})
 		<h2 class="text-xl text-error w-full text-center">{ props.Err.Error() }</h2>
 		if props.BackUrl != "" {
 			<div class="w-full flex justify-center">
