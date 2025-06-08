@@ -19,10 +19,8 @@ templ UserManageEditPage(props UserManageEditPageProps) {
 	@layout.Page(layout.PageProps{
 		Title: "Edit user",
 		Info:  props.CurrentUserInfo,
+		Err:   props.Err,
 	}) {
-		if props.Err != nil {
-			@components.Error(props.Err.Error())
-		}
 		<form method="POST" action={ templ.URL(props.Action) } class="w-full flex flex-col gap-4 max-w-sm self-center">
 			@userDataForm(userDataFormProps{
 				ValidationErr: props.ValidationErr,

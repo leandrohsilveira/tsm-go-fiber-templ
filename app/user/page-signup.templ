@@ -14,11 +14,8 @@ type SignUpPageProps struct {
 }
 
 templ SignUpPage(props SignUpPageProps) {
-	@layout.Center(layout.CenterProps{Title: "Sign Up"}) {
-		if props.Err != nil {
-			@components.Error(props.Err.Error())
-		}
-		<form action={ templ.URL(props.Action) } method="POST" class="flex flex-col gap-4 w-sm">
+	@layout.Center(layout.CenterProps{Title: "Sign Up", HideNavbar: true, Err: props.Err}) {
+		<form action={ templ.URL(props.Action) } method="POST" class="flex flex-col gap-4">
 			@userDataForm(userDataFormProps{
 				Value: userDataFormDto{
 					Name:  props.Value.Name,

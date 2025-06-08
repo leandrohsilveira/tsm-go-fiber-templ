@@ -2,6 +2,8 @@ package layout
 
 import "github.com/leandrohsilveira/tsm/guards"
 import "github.com/leandrohsilveira/tsm/components/button"
+import "github.com/leandrohsilveira/tsm/components/alert"
+import "github.com/leandrohsilveira/tsm/components/icon"
 
 type ErrorProps struct {
 	Info    *guards.CurrentUserDto
@@ -10,8 +12,7 @@ type ErrorProps struct {
 }
 
 templ Error(props ErrorProps) {
-	@Center(CenterProps{Title: "Error", HideTitle: true}) {
-		@Navbar(NavbarProps{Info: props.Info, Class: "fixed top-0 left-0 right-0"})
+	@Center(CenterProps{Title: "Error", Info: props.Info, HideTitle: true}) {
 		<h2 class="text-xl text-error w-full text-center">{ props.Err.Error() }</h2>
 		if props.BackUrl != "" {
 			<div class="w-full flex justify-center">
@@ -19,6 +20,18 @@ templ Error(props ErrorProps) {
 					Go back
 				}
 			</div>
+		}
+	}
+}
+
+templ errorAlert(message string) {
+	@alert.Alert(alert.Props{Variant: alert.VariantDestructive}) {
+		@icon.TriangleAlert(icon.Props{Size: 16})
+		@alert.Title() {
+			Error
+		}
+		@alert.Description() {
+			{ message }
 		}
 	}
 }

@@ -2,21 +2,31 @@ package layout
 
 import "fmt"
 import "github.com/leandrohsilveira/tsm/components"
+import "github.com/leandrohsilveira/tsm/guards"
 
 type CenterProps struct {
-	Title     string
-	HideTitle bool
+	Title      string
+	Info       *guards.CurrentUserDto
+	HideTitle  bool
+	HideNavbar bool
+	Err        error
 }
 
 templ Center(props CenterProps) {
 	@components.Html(fmt.Sprintf("TSM - %s", props.Title)) {
-		<main class="w-full flex flex-col items-center justify-center gap-4 h-lvh">
+		if !props.HideNavbar {
+			@Navbar(NavbarProps{Info: props.Info})
+		}
+		<main class={ "w-full flex flex-col items-center justify-center gap-4", templ.KV("h-[calc(100lvh-5.5rem)]", !props.HideNavbar), templ.KV("h-lvh", props.HideNavbar) }>
 			if !props.HideTitle {
 				<header class="flex items-center">
 					<h1>{ props.Title }</h1>
 				</header>
 			}
 			<div class="flex flex-col gap-4 w-sm">
+				if props.Err != nil {
+					@errorAlert(props.Err.Error())
+				}
 				{ children... }
 			</div>
 		</main>

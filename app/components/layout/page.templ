@@ -8,6 +8,7 @@ type PageProps struct {
 	Info      *guards.CurrentUserDto
 	Title     string
 	HideTitle bool
+	Err       error
 }
 
 templ Page(props PageProps) {
@@ -20,6 +21,9 @@ templ Page(props PageProps) {
 				</header>
 			}
 			<div class="flex flex-col gap-4 w-full max-w-5xl">
+				if props.Err != nil {
+					@errorAlert(props.Err.Error())
+				}
 				{ children... }
 			</div>
 		</main>

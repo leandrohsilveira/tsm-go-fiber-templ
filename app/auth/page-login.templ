@@ -13,10 +13,7 @@ type LoginPageProps struct {
 }
 
 templ LoginPage(props LoginPageProps) {
-	@layout.Center(layout.CenterProps{Title: "Sign-in"}) {
-		if props.Err != nil {
-			@components.Error(props.Err.Error())
-		}
+	@layout.Center(layout.CenterProps{Title: "Sign-in", HideNavbar: true, Err: props.Err}) {
 		<form action={ templ.URL(props.Action) } method="POST" class="flex flex-col gap-4">
 			@components.Field(components.FieldProps{
 				Name:     "username",
