@@ -4,6 +4,8 @@ import "github.com/leandrohsilveira/tsm/guards"
 import "github.com/leandrohsilveira/tsm/components/button"
 import "github.com/leandrohsilveira/tsm/components/dropdown"
 import "github.com/leandrohsilveira/tsm/components/icon"
+import "github.com/leandrohsilveira/tsm/dao"
+import "github.com/leandrohsilveira/tsm/components/badge"
 
 type NavbarProps struct {
 	Info  *guards.CurrentUserDto
@@ -30,13 +32,22 @@ templ Navbar(props NavbarProps) {
 							My Account
 						}
 						@dropdown.Group() {
-							@dropdown.Label(dropdown.LabelProps{Class: "flex items-center justify-start gap-2 font-normal"}) {
+							@dropdown.Item(dropdown.ItemProps{Class: "flex items-center justify-start gap-2", Disabled: true}) {
 								@icon.IdCard(icon.Props{Size: 16})
 								{ props.Info.Name }
 							}
-							@dropdown.Label(dropdown.LabelProps{Class: "flex items-center justify-start gap-2 font-normal"}) {
+							@dropdown.Item(dropdown.ItemProps{Class: "flex items-center justify-start gap-2", Disabled: true}) {
 								@icon.AtSign(icon.Props{Size: 16})
 								{ props.Info.Email }
+							}
+							@dropdown.Item(dropdown.ItemProps{Class: "flex justify-center", Disabled: true}) {
+								@UserRoleBadge(props.Info.Role)
+							}
+						}
+						@dropdown.Group() {
+							@dropdown.Item(dropdown.ItemProps{Class: "flex items-center justify-start gap-2 cursor-pointer", Href: "/auth/change-password"}) {
+								@icon.KeyRound(icon.Props{Size: 16})
+								Change password
 							}
 						}
 						@dropdown.Separator()
@@ -58,4 +69,16 @@ templ Navbar(props NavbarProps) {
 			}
 		</header>
 	</nav>
+}
+
+templ UserRoleBadge(role dao.UserRole) {
+	if role == dao.UserRoleAdminUser {
+		@badge.Badge() {
+			Admin
+		}
+	} else {
+		@badge.Badge(badge.Props{Variant: badge.VariantSecondary}) {
+			Regular
+		}
+	}
 }

@@ -2,8 +2,7 @@ package user
 
 import "fmt"
 import "github.com/leandrohsilveira/tsm/components"
-import "github.com/leandrohsilveira/tsm/dao"
-import "github.com/leandrohsilveira/tsm/components/badge"
+import "github.com/leandrohsilveira/tsm/components/layout"
 
 templ userList(users []UserDisplayDto) {
 	@components.ListContainer(components.ListContainerProps{Direction: components.ListDirectionVertical}) {
@@ -23,21 +22,9 @@ templ userListItem(user UserDisplayDto) {
 		<a href={ templ.URL(href) } class="flex flex-col gap-2 w-full focus-visible:outline-none p-2">
 			<strong>{ user.Name }</strong>
 			<div class="flex gap-2">
-				@userRole(user)
+				@layout.UserRoleBadge(user.Role)
 				<span>{ user.Email }</span>
 			</div>
 		</a>
-	}
-}
-
-templ userRole(user UserDisplayDto) {
-	if user.Role == dao.UserRoleAdminUser {
-		@badge.Badge() {
-			Admin
-		}
-	} else {
-		@badge.Badge(badge.Props{Variant: badge.VariantSecondary}) {
-			Regular
-		}
 	}
 }
